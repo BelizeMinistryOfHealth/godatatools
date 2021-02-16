@@ -25,7 +25,7 @@ type Address struct {
 	City         string       `json:"city"`
 	AddressLine1 string       `json:"addressLine1"`
 	AddressLine2 string       `json:"addressLine2"`
-	Date         *time.Time   `json:"date"`
+	Date         *time.Time   `bson:"date" json:"date"`
 	PhoneNumber  string       `json:"phoneNumber"`
 	LocationId   string       `json:"locationId"`
 	GeoLocation  *GeoLocation `json:"geoLocation,omitempty"`
@@ -68,10 +68,10 @@ type Questionnaire struct {
 	Ssn                                           []QuestionnaireAnswer `bson:"FA0_caseidentifier_socialnumber" json:"FA0_caseidentifier_socialnumber"`
 	PriorXdayExposureTravelledInternationally     []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_travelledinternationally" json:"FA0_priorXdayexposure_travelledinternationally"`
 	PriorXdayExposureContactWithCase              []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_contactwithcase" json:"FA0_priorXdayexposure_contactwithcase"`
-	PriorXDayexposureContactWithCaseDate          []DateAnswer          `bson:"FA0_priorXdayexposure_contactwithcasedate" json:"FA0_priorXdayexposure_contactwithcasedate"`
+	PriorXdayExposureContactWithCaseDate          []DateAnswer          `bson:"FA0_priorXdayexposure_contactwithcasedate" json:"FA0_priorXdayexposure_contactwithcasedate"`
 	PriorXdayExposureInternationalDateTravelFrom  []DateAnswer          `bson:"FA0_priorXdayexposure_internationaldatetravelfrom" json:"FA0_priorXdayexposure_internationaldatetravelfrom"`
 	PriorXdayExposureInternationalDatetravelTo    []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_internationaldatetravelto" json:"FA0_priorXdayexposure_internationaldatetravelto"`
-	PriorXdayexposureInternationaltravelcountries []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_internationaltravelcountries" json:"FA0_priorXdayexposure_internationaltravelcountries"`
+	PriorXdayExposureInternationaltravelcountries []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_internationaltravelcountries" json:"FA0_priorXdayexposure_internationaltravelcountries"`
 	PriorXdayExposureInternationalTravelCities    []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_internationaltravelcities" json:"FA0_priorXdayexposure_internationaltravelcities"`
 	TypeOfTraveller                               []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_typeoftraveler" json:"FA0_priorXdayexposure_typeoftraveler"`
 	PurposeOfTravel                               []QuestionnaireAnswer `bson:"FA0_priorXdayexposure_purposeoftravel" json:"FA0_priorXdayexposure_purposeoftravel"`

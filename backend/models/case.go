@@ -15,7 +15,7 @@ type Case struct {
 	ID               string            `bson:"_id" json:"id"`
 	VisualID         string            `json:"visualId"`
 	Bhis             int               `json:"bhis"`
-	ReportingDate    time.Time         `json:"dateOfReporting"`
+	ReportingDate    time.Time         `bson:"dateOfReporting" json:"dateOfReporting"`
 	CreatedAt        time.Time         `json:"createdAt"`
 	CreatedBy        string            `json:"createdBy"`
 	FirstName        string            `json:"firstName"`
