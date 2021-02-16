@@ -32,5 +32,23 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(cases)
+}
 
+func (s Server) AllOutbreaks(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, "GET only", http.StatusBadRequest)
+		return
+	}
+
+	outbreaks, err := s.DbRepository.ListOutbreaks(r.Context())
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		log.WithError(err).Error("could not retrieve the outbreaks")
+		return
+	}
+	json.NewEncoder(w).Encode(outbreaks)
 }
