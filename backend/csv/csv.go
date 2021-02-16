@@ -90,6 +90,18 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		"respiratorySampleCollected",
 		"respiratorySampleCollectedDate",
 		"mechanicalVentilation",
+		"hospitalization1_typeId",
+		"hospitalization1_startDate",
+		"hospitalization1_endDate",
+		"hospitalization1_centerName",
+		"hospitalization1_locationId",
+		"hospitalization1_comments",
+		"hospitalization2_typeId",
+		"hospitalization2_startDate",
+		"hospitalization2_endDate",
+		"hospitalization2_centerName",
+		"hospitalization2_locationId",
+		"hospitalization2_comments",
 	}
 	if err := writer.Write(headers); err != nil {
 		return fmt.Errorf("error: writing header for csv: %w", err)
@@ -353,6 +365,28 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 			mechanicalVentilation = questionnaire.MechanicalVentilation[0].Value
 		}
 		record = append(record, mechanicalVentilation)
+
+		// Process the Hospitalizations data
+		var hospitalizations []models.Hospitalization
+		if c.Hospitalizations != nil {
+			hospitalizations = c.Hospitalizations
+		}
+		for _, h := range hospitalizations {
+			record = append(record, h.TypeId)
+			var startDate string
+			if h.StartDate != nil {
+				startDate = h.StartDate.Format(layoutISO)
+			}
+			record = append(record, startDate)
+			var endDate string
+			if h.EndDate != nil {
+				endDate = h.EndDate.Format(layoutISO)
+			}
+			record = append(record, endDate)
+			record = append(record, h.CenterName)
+			record = append(record, h.LocationId)
+			record = append(record, h.Comments)
+		}
 
 		if err := writer.Write(record); err != nil {
 			return fmt.Errorf("failed to write csv record(%s): %w", c.VisualID, err)

@@ -4,8 +4,8 @@ import "time"
 
 type Hospitalization struct {
 	TypeId     string     `json:"typeId"`
-	StartDate  time.Time  `json:"startDate"`
-	EndDate    *time.Time `json:"endDate,omitempty"`
+	StartDate  *time.Time `bson:"startDate" json:"startDate"`
+	EndDate    *time.Time `bson:"endDate" json:"endDate,omitempty"`
 	CenterName string     `json:"centerName"`
 	LocationId string     `json:"locationId"`
 	Comments   string     `json:"comments"`
@@ -34,7 +34,7 @@ type Case struct {
 	DateOfOutcome    *time.Time        `json:"dateOfOutcome"`
 	Addresses        []Address         `json:"addresses"`
 	Questionnaire    Questionnaire     `bson:"questionnaireAnswers" json:"questionnaireAnswers"`
-	Hospitalizations []Hospitalization `json:"dateRanges,omitempty"`
+	Hospitalizations []Hospitalization `bson:"dateRanges" json:"dateRanges,omitempty"`
 }
 
 type Outbreak struct {
