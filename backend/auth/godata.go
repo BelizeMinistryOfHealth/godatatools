@@ -20,7 +20,7 @@ func (g GoData) GetToken(username, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req, err := http.Post(fmt.Sprintf("%s/oauth", g.BaseURL), "application/json", bytes.NewReader(reqBody))
+	req, err := http.Post(fmt.Sprintf("%s/api/oauth/token", g.BaseURL), "application/json", bytes.NewReader(reqBody))
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +30,7 @@ func (g GoData) GetToken(username, password string) (string, error) {
 		return "", err
 	}
 	if req.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("auth with godata failed")
+		return "", fmt.Errorf("auth with godata failed: status: %d", req.StatusCode)
 	}
 	return authResp.AccessToken, nil
 }

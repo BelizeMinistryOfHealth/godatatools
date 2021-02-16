@@ -31,7 +31,7 @@ func HandlerCasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 	if err := server.DbRepository.Connect(r.Context()); err != nil {
 		log.Fatalf("could not connect to mongo: %v", err)
 	}
-	defer server.DbRepository.Disconnect(r.Context())
+	//defer server.DbRepository.Disconnect(r.Context())
 	corsMid.Then(server.CasesByOutbreak)(w, r)
 }
 
@@ -40,7 +40,7 @@ func HandlerOutbreaks(w http.ResponseWriter, r *http.Request) {
 	if err := server.DbRepository.Connect(r.Context()); err != nil {
 		log.Fatalf("could not connect to mongo: %v", err)
 	}
-	defer server.DbRepository.Disconnect(r.Context())
+	//defer server.DbRepository.Disconnect(r.Context())
 	corsMid.Then(server.AllOutbreaks)(w, r)
 }
 
