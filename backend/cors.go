@@ -22,3 +22,13 @@ func JsonContentType() Middleware {
 		}
 	}
 }
+
+func FileTransferType() Middleware {
+	return func(f http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Description", "File Transfer")
+			w.Header().Set("Content-Disposition", "attachment;filename=cases.csv")
+			f(w, r)
+		}
+	}
+}

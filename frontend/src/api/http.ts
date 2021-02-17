@@ -1,19 +1,19 @@
-import Axios from "axios";
-import { useState } from "react";
+import Axios from 'axios';
+import { useState } from 'react';
 
 class HttpApi {
   protected baseUrl: string;
   axiosInstance;
   headers: {
     Accept: string;
-    "Content-Type": string;
+    'Content-Type': string;
     responseType?: string;
   };
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     };
     this.axiosInstance = Axios.create({
       baseURL: this.baseUrl,
@@ -29,9 +29,9 @@ class HttpApi {
     return this.axiosInstance.get(path, {
       headers: {
         ...this.headers,
-        Accept: "application/json",
-        "Content-Type": "application/pdf",
-        responseType: "blob",
+        Accept: 'application/json',
+        'Content-Type': 'application/pdf',
+        responseType: 'blob',
       },
     });
   }
@@ -46,6 +46,10 @@ class HttpApi {
 
   async delete(path: string) {
     return this.axiosInstance.delete(path);
+  }
+
+  public getBaseUrl(): string {
+    return this.baseUrl;
   }
 }
 

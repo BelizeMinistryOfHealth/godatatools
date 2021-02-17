@@ -12,9 +12,10 @@ import {
   ResponsiveContext,
   Text,
 } from 'grommet';
+import { CloudDownload } from 'grommet-icons';
 
 export interface Outbreak {
-  id: string;
+  _id: string;
   name: string;
 }
 
@@ -26,7 +27,7 @@ interface OutbreakData {
 
 const OutbreakGrid = (props: { outbreaks: Outbreak[] }) => {
   const size = useContext(ResponsiveContext);
-
+  const { httpInstance } = useHttpApi();
   return (
     <Box
       pad={'small'}
@@ -41,6 +42,16 @@ const OutbreakGrid = (props: { outbreaks: Outbreak[] }) => {
         {props.outbreaks.map((outbreak, index) => (
           <Card pad={'large'} key={index}>
             <Text key={index}>{outbreak.name}</Text>
+            <CloudDownload
+              onClick={() => {
+                window.open(
+                  `${httpInstance.getBaseUrl()}/casesByOutbreak?outbreakId=${
+                    outbreak._id
+                  }`,
+                  '_blank'
+                );
+              }}
+            />
           </Card>
         ))}
       </Grid>
