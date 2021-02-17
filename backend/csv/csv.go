@@ -102,6 +102,18 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		"hospitalization2_centerName",
 		"hospitalization2_locationId",
 		"hospitalization2_comments",
+		"hospitalization3_typeId",
+		"hospitalization3_startDate",
+		"hospitalization3_endDate",
+		"hospitalization3_centerName",
+		"hospitalization3_locationId",
+		"hospitalization3_comments",
+		"hospitalization4_typeId",
+		"hospitalization4_startDate",
+		"hospitalization4_endDate",
+		"hospitalization4_centerName",
+		"hospitalization4_locationId",
+		"hospitalization4_comments",
 	}
 	if err := writer.Write(headers); err != nil {
 		return fmt.Errorf("error: writing header for csv: %w", err)
@@ -195,7 +207,7 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		}
 		record = append(record, nausea)
 		var diarrhea string
-		if len(questionnaire.Diarrhea)  > 0 {
+		if len(questionnaire.Diarrhea) > 0 {
 			diarrhea = questionnaire.Diarrhea[0].Value
 		}
 		record = append(record, diarrhea)
@@ -269,7 +281,7 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		if len(questionnaire.PriorXdayExposureTravelledInternationally) > 0 {
 			internationalTravel = questionnaire.PriorXdayExposureTravelledInternationally[0].Value
 		}
-		record = append(record,internationalTravel)
+		record = append(record, internationalTravel)
 		var contactWithCase string
 		if len(questionnaire.PriorXdayExposureContactWithCase) > 0 {
 			contactWithCase = questionnaire.PriorXdayExposureContactWithCase[0].Value
@@ -297,7 +309,7 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		if len(questionnaire.PriorXdayExposureInternationalDatetravelTo) > 0 {
 			intlTravelDate = questionnaire.PriorXdayExposureInternationalDatetravelTo[0].Value
 		}
-		record = append(record,intlTravelDate)
+		record = append(record, intlTravelDate)
 		var travelCountries string
 		if len(questionnaire.PriorXdayExposureInternationaltravelcountries) > 0 {
 			travelCountries = questionnaire.PriorXdayExposureInternationaltravelcountries[0].Value
@@ -309,7 +321,7 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		}
 		record = append(record, travelCities)
 		var typeOfTraveller string
-		if len(questionnaire.TypeOfTraveller)> 0 {
+		if len(questionnaire.TypeOfTraveller) > 0 {
 			typeOfTraveller = questionnaire.TypeOfTraveller[0].Value
 		}
 		record = append(record, typeOfTraveller)
