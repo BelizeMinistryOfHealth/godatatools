@@ -41,7 +41,7 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error converting cases to csv", http.StatusInternalServerError)
 		return
 	}
-
+	csvWriter.Flush()
 	if _, err := w.Write(b.Bytes()); err != nil {
 		log.WithError(err).Error("failed to stream file")
 		http.Error(w, "error streaming file", http.StatusInternalServerError)
