@@ -71,8 +71,15 @@ const Home = () => {
       httpInstance
         .get('/outbreaks')
         .then((resp) => {
+          const outbreaks = resp.data.map((o: Outbreak) => {
+            const name = o.name.split('_');
+            return {
+              _id: o._id,
+              name: name[name.length - 1],
+            };
+          });
           setOutbreakData({
-            outbreaks: resp.data,
+            outbreaks: outbreaks,
             status: 'done',
           });
         })
