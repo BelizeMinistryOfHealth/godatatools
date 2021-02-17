@@ -21,7 +21,7 @@ func (e MongoConnectionErr) Unwrap() error {
 // Errors when doing queries
 type MongoQueryErr struct {
 	Reason string
-	Inner error
+	Inner  error
 }
 
 func (e MongoQueryErr) Error() string {
@@ -29,4 +29,16 @@ func (e MongoQueryErr) Error() string {
 		return fmt.Sprintf("failed to query mongo: %s: %v", e.Reason, e.Inner)
 	}
 	return fmt.Sprintf("failed to query mongo: %s", e.Reason)
+}
+
+type MongoNoResultErr struct {
+	Reason string
+	Inner  error
+}
+
+func (e MongoNoResultErr) Error() string {
+	if e.Inner != nil {
+		return fmt.Sprintf("mongo: no records returned from query: %s: %v", e.Reason, e.Inner)
+	}
+	return fmt.Sprintf("mongo: no records returned from query: %s", e.Reason)
 }

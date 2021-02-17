@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestStore_FindCasesByOutbreak(t *testing.T) {
@@ -63,5 +64,55 @@ func TestStore_ListOutbreaks(t *testing.T) {
 	if len(outbreaks) == 0 {
 		t.Errorf("ListOutbreaks() should return a non-empty list")
 	}
+}
 
+func TestStore_OutbreakById(t *testing.T) {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+	ctx := context.Background()
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	defer store.Disconnect(ctx)
+	outbreakId := "d54c3aa5-7f43-4733-a482-32d4f8d0b8c4"
+
+	outbreak, err := store.OutbreakById(ctx, outbreakId)
+	if err != nil {
+		t.Fatalf("OutbreakById() failed: %v", err)
+	}
+
+	if outbreak.Name == "" {
+		t.Errorf("OutbreakById() name should not be empty")
+	}
+}
+
+func TestStore_FindCasesByReportingDate(t *testing.T) {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+	ctx := context.Background()
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	defer store.Disconnect(ctx)
+	outbreakId := "d54c3aa5-7f43-4733-a482-32d4f8d0b8c4"
+	reportingDate, _ := time.Parse("2006-01-02", "2021-02-16")
+
+	cases, err := store.FindCasesByReportingDate(ctx, outbreakId, reportingDate)
+	if err != nil {
+		t.Fatalf("FindCasesByReportingDate() failed: %v", err)
+	}
+
+	if len(cases) == 0 {
+		t.Errorf("FindCasesByReportingDate() cases should not be empty")
+	}
 }

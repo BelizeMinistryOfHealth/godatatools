@@ -7,18 +7,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	mn "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"time"
 )
 
 type Store struct {
-	Database string
-	URI string
-	Client *mn.Client
-	Connect func(context.Context) error
+	Database   string
+	URI        string
+	Client     *mn.Client
+	Connect    func(context.Context) error
 	Disconnect func(ctx context.Context) error
 }
 
 const personCollection = "person"
 const outbreakCollection = "outbreak"
+
+//const labCollection = "labResult"
 
 func New(uri, database string) (Store, error) {
 	client, err := mn.NewClient(options.Client().ApplyURI(uri))
@@ -29,10 +32,10 @@ func New(uri, database string) (Store, error) {
 		}
 	}
 	return Store{
-		Database: database,
-		URI: uri,
-		Client: client,
-		Connect: client.Connect,
+		Database:   database,
+		URI:        uri,
+		Client:     client,
+		Connect:    client.Connect,
 		Disconnect: client.Disconnect,
 	}, nil
 }
@@ -58,6 +61,27 @@ func (s *Store) FindCasesByOutbreak(ctx context.Context, ID string) ([]models.Ca
 	return cases, nil
 }
 
+// FindCasesByReportingDate returns the cases reported in the specified date for the designated outbreak.
+func (s *Store) FindCasesByReportingDate(ctx context.Context, outbreakID string, reportingDate time.Time) ([]models.Case, error) {
+	collection := s.Client.Database(s.Database).Collection(personCollection)
+	filter := bson.M{"outbreakId": outbreakID, "dateOfReporting": reportingDate}
+	var cases []models.Case
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return cases, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error querying for cases on reporting date: %v for outbreak: %s", reportingDate, outbreakID),
+			Inner:  err,
+		}
+	}
+
+	if err := cursor.All(ctx, &cases); err != nil {
+		return cases, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error decoding cases for reporting date: %v and outbreakId: %s", reportingDate, outbreakID),
+			Inner:  err,
+		}
+	}
+	return cases, nil
+}
 
 func (s *Store) ListOutbreaks(ctx context.Context) ([]models.Outbreak, error) {
 	collection := s.Client.Database(s.Database).Collection(outbreakCollection)
@@ -66,7 +90,7 @@ func (s *Store) ListOutbreaks(ctx context.Context) ([]models.Outbreak, error) {
 	if err != nil {
 		return outbreaks, MongoQueryErr{
 			Reason: "error listing outbreaks",
-			Inner: err,
+			Inner:  err,
 		}
 	}
 	if err := cursor.All(ctx, &outbreaks); err != nil {
@@ -77,3 +101,30 @@ func (s *Store) ListOutbreaks(ctx context.Context) ([]models.Outbreak, error) {
 	}
 	return outbreaks, nil
 }
+
+// OutbreakById returns an outbreak that has the specified id
+func (s *Store) OutbreakById(ctx context.Context, ID string) (models.Outbreak, error) {
+	collection := s.Client.Database(s.Database).Collection(outbreakCollection)
+	var outbreak models.Outbreak
+	filter := bson.M{"_id": ID}
+	result := collection.FindOne(ctx, filter)
+	if result == nil {
+		return outbreak, MongoNoResultErr{
+			Reason: fmt.Sprintf("no outbreak found with id: %s", ID),
+			Inner:  nil,
+		}
+	}
+	if err := result.Decode(&outbreak); err != nil {
+		return outbreak, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo: could not decode outbreak with id: %s", ID),
+			Inner:  err,
+		}
+	}
+
+	return outbreak, nil
+}
+
+//func (s *Store) LabTestByReportingDate(ctx context.Context, outbreakID string, reportingDate time.Time) ([]models.RawLabTest, error) {
+//	collection := s.Client.Database(s.Database).Collection(labCollection)
+//	filter := bson.M{"outbreakId": outbreakID, "reportingDate": reportingDate}
+//}
