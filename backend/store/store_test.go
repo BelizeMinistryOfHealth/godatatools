@@ -116,3 +116,29 @@ func TestStore_FindCasesByReportingDate(t *testing.T) {
 		t.Errorf("FindCasesByReportingDate() cases should not be empty")
 	}
 }
+
+func TestStore_LabTestsForCases(t *testing.T) {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+	ctx := context.Background()
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	defer store.Disconnect(ctx)
+
+	caseIds := []string{"aad8daf1-272d-4ec9-b7bd-7793d5196452", "c0c60423-357d-4407-ba0a-e075efd5d6ae", "3ebc725b-dfc5-4c88-9bce-7362f42725c2"}
+
+	cases, err := store.LabTestsForCases(ctx, caseIds)
+	if err != nil {
+		t.Fatalf("LabTestsForCases() failed: %v", err)
+	}
+
+	if len(cases) != 2 {
+		t.Errorf("LabTestsForCases() expected result size to be 2")
+	}
+}

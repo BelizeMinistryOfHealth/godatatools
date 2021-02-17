@@ -20,8 +20,7 @@ type Store struct {
 
 const personCollection = "person"
 const outbreakCollection = "outbreak"
-
-//const labCollection = "labResult"
+const labCollection = "labResult"
 
 func New(uri, database string) (Store, error) {
 	client, err := mn.NewClient(options.Client().ApplyURI(uri))
@@ -124,7 +123,24 @@ func (s *Store) OutbreakById(ctx context.Context, ID string) (models.Outbreak, e
 	return outbreak, nil
 }
 
-//func (s *Store) LabTestByReportingDate(ctx context.Context, outbreakID string, reportingDate time.Time) ([]models.RawLabTest, error) {
-//	collection := s.Client.Database(s.Database).Collection(labCollection)
-//	filter := bson.M{"outbreakId": outbreakID, "reportingDate": reportingDate}
-//}
+// LabTestsForCases returns a list of RawLabTest for cases provided in the caseIds
+func (s *Store) LabTestsForCases(ctx context.Context, caseIds []string) ([]models.RawLabTest, error) {
+	collection := s.Client.Database(s.Database).Collection(labCollection)
+	filter := bson.M{"personId": bson.M{"$in": caseIds}, "deleted": false}
+	var labTests []models.RawLabTest
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return labTests, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error querying lab tests for caseIds %v", caseIds),
+			Inner:  err,
+		}
+	}
+
+	if err := cursor.All(ctx, &labTests); err != nil {
+		return labTests, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error decoding lab tests for caseIds: %v", caseIds),
+			Inner:  err,
+		}
+	}
+	return labTests, nil
+}

@@ -6,6 +6,7 @@ import "time"
 type RawLabTest struct {
 	ID                  string    `bson:"_id" json:"id"`
 	PersonType          string    `json:"personType"`
+	PersonId            string    `json:"personId"`
 	DateSampleTaken     time.Time `bson:"dateSampleTaken" json:"dateSampleTaken"`
 	DateSampleDelivered time.Time `bson:"dateSampleDelivered" json:"dateSampleDelivered"`
 	DateTesting         time.Time `bson:"dateTesting" json:"dateTesting"`
