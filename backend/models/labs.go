@@ -23,6 +23,14 @@ type RawLabTest struct {
 	UpdatedAt           time.Time `bson:"updatedAt" json:"updatedAt"`
 }
 
+type Person struct {
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Gender    string    `json:"gender"`
+	Dob       time.Time `json:"dob"`
+	Age       int       `json:"age"`
+}
+
 type LabTest struct {
 	ID                  string      `json:"id"`
 	LabName             string      `json:"string"`
@@ -41,7 +49,7 @@ type LabTest struct {
 	CreatedAt           time.Time   `json:"createdAt"`
 	CreatedBy           string      `json:"createdBy"`
 	UpdatedAt           time.Time   `json:"updatedAt"`
-	Person              Case        `json:"person"`
+	Person              Person      `json:"person"`
 	LabFacility         LabFacility `json:"labFacility"`
 }
 

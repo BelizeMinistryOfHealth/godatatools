@@ -3,6 +3,7 @@ package godatatools
 import (
 	"bytes"
 	csv2 "bz.moh.epi/godatatools/csv"
+	"bz.moh.epi/godatatools/models"
 	"encoding/csv"
 	"encoding/json"
 	log "github.com/sirupsen/logrus"
@@ -67,4 +68,50 @@ func (s Server) AllOutbreaks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(outbreaks)
+}
+
+func (s Server) LabTestResults(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, "GET only", http.StatusBadRequest)
+	}
+
+	// Get the case id from the url path
+	query := r.URL.Query()
+	firstName := query.Get("firstName")
+	if len(firstName) == 0 {
+		http.Error(w, "a first name must be provided", http.StatusBadRequest)
+		return
+	}
+	lastName := query.Get("lastName")
+	if len(lastName) == 0 {
+		http.Error(w, "a last name must be provided", http.StatusBadRequest)
+		return
+	}
+
+	labTests, err := s.DbRepository.LabTestsByCaseName(r.Context(), firstName, lastName)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"firstName": firstName,
+			"lastName":  lastName,
+		}).WithError(err).Error("error retrieving lab tests by first and last names")
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if labTests == nil {
+		labTests = []models.LabTest{}
+	}
+
+	if err := json.NewEncoder(w).Encode(labTests); err != nil {
+		log.WithFields(log.Fields{
+			"firstName": firstName,
+			"lastName":  lastName,
+		}).WithError(err).Error("error encoding lab tests results")
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 }

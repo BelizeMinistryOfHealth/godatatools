@@ -54,6 +54,11 @@ func HandlerGoDataAuth(w http.ResponseWriter, r *http.Request) {
 	corsMid.Then(server.AuthWithGodata)(w, r)
 }
 
+func HandlerLabTestSearchResult(w http.ResponseWriter, r *http.Request) {
+	mid := NewChain(EnableCors(), JsonContentType())
+	mid.Then(server.LabTestResults)(w, r)
+}
+
 // Server is exposed to modify the Server settings
 func GetServer() *Server {
 	return &server
@@ -63,4 +68,5 @@ func (s Server) RegisterHandlers() {
 	http.HandleFunc("/casesByOutbreak", HandlerCasesByOutbreak)
 	http.HandleFunc("/auth", HandlerGoDataAuth)
 	http.HandleFunc("/outbreaks", HandlerOutbreaks)
+	http.HandleFunc("/labTests/searchByName", HandlerLabTestSearchResult)
 }

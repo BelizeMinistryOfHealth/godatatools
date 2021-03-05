@@ -42,3 +42,7 @@ func (e MongoNoResultErr) Error() string {
 	}
 	return fmt.Sprintf("mongo: no records returned from query: %s", e.Reason)
 }
+
+func (e MongoNoResultErr) Unwrap() error {
+	return e.Inner
+}

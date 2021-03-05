@@ -1,6 +1,7 @@
 package store
 
 import (
+	"bz.moh.epi/godatatools/age"
 	"bz.moh.epi/godatatools/models"
 	"context"
 	"fmt"
@@ -175,6 +176,9 @@ func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName stri
 		caseIds = append(caseIds, c.ID)
 	}
 
+	if len(caseIds) == 0 {
+		return labTests, nil
+	}
 	rawLabTests, testsErr := s.LabTestsForCases(ctx, caseIds)
 	if testsErr != nil {
 		return labTests, MongoQueryErr{
@@ -218,8 +222,14 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 		CreatedAt:           test.CreatedAt,
 		CreatedBy:           test.CreatedBy,
 		UpdatedAt:           test.UpdatedAt,
-		Person:              person,
-		LabFacility:         labFacility,
+		Person: models.Person{
+			FirstName: person.FirstName,
+			LastName:  person.LastName,
+			Gender:    person.Gender,
+			Dob:       person.Dob,
+			Age:       age.AgeAt(person.Dob, test.DateTesting),
+		},
+		LabFacility: labFacility,
 	}
 	return labTest
 }
