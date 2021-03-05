@@ -12,10 +12,12 @@ tidy:
 build-linux:
 	export GO111MODULE=on
 	env GOOS=linux go build -ldflags="-s -w" -o bin/godatatools cmd/server/main.go
+	chmod +x bin/godatatools
 
 build-macos:
 	export GO111MODULE=on
 	env GOOS=darwin go build -o bin/godatatools cmd/server/main.go
+	chomd +x bin/godatatools
 
 
 clean:
