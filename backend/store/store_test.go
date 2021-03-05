@@ -142,3 +142,27 @@ func TestStore_LabTestsForCases(t *testing.T) {
 		t.Errorf("LabTestsForCases() expected result size to be 2")
 	}
 }
+
+func TestStore_LabTestsByCaseName(t *testing.T) {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+	ctx := context.Background()
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	defer store.Disconnect(ctx)
+
+	labTests, err := store.LabTestsByCaseName(ctx, "robErto", "GuerrA")
+	if err != nil {
+		t.Fatalf("LabTestsByCaseName() failed: %v", err)
+	}
+
+	if len(labTests) == 0 {
+		t.Errorf("LabTestsByCaseName() expected non-empty list")
+	}
+}

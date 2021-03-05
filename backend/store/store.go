@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mn "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
@@ -143,4 +144,93 @@ func (s *Store) LabTestsForCases(ctx context.Context, caseIds []string) ([]model
 		}
 	}
 	return labTests, nil
+}
+
+// LabTestsByCaseName retrieves the lab tests for a case that matches the first & last names.
+func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName string) ([]models.LabTest, error) {
+	var rawLabTests []models.RawLabTest
+	var labTests []models.LabTest
+	/// find cases by first & last names.
+	personCol := s.Client.Database(s.Database).Collection(personCollection)
+	firstNameRegex := primitive.Regex{Pattern: firstName, Options: "i"}
+	lastNameRegex := primitive.Regex{Pattern: lastName, Options: "i"}
+	filter := bson.M{"firstName": bson.M{"$regex": firstNameRegex}, "lastName": bson.M{"$regex": lastNameRegex}}
+	var cases []models.Case
+	cursor, err := personCol.Find(ctx, filter)
+	if err != nil {
+		return labTests, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error querying for cases records for %s %s", firstName, lastName),
+			Inner:  err,
+		}
+	}
+	if err := cursor.All(ctx, &cases); err != nil {
+		return labTests, MongoQueryErr{
+			Reason: fmt.Sprintf("mongo error querying case records for %s %s", firstName, lastName),
+			Inner:  err,
+		}
+	}
+	// Retrieve the lab tests for every case
+	var caseIds []string
+	for _, c := range cases {
+		caseIds = append(caseIds, c.ID)
+	}
+
+	rawLabTests, testsErr := s.LabTestsForCases(ctx, caseIds)
+	if testsErr != nil {
+		return labTests, MongoQueryErr{
+			Reason: fmt.Sprintf("failed to fetch lab tests for %s %s", firstName, lastName),
+			Inner:  testsErr,
+		}
+	}
+
+	for i, _ := range rawLabTests {
+		labTests = append(labTests, RawLabTestToLabTest(rawLabTests[i], findCaseInCases(rawLabTests[i].PersonId, cases)))
+	}
+
+	return labTests, nil
+}
+
+// RawLabTestToLabTest converts a RawLabTest to a LabTest
+func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabTest {
+	var labFacility models.LabFacility
+	for _, l := range models.LabFacilities {
+		if test.OutbreakID == l.ID {
+			labFacility = l
+			break
+		}
+	}
+
+	labTest := models.LabTest{
+		ID:                  test.ID,
+		LabName:             labFacility.Name,
+		PersonType:          test.PersonType,
+		DateSampleTaken:     test.DateSampleTaken,
+		DateSampleDelivered: test.DateSampleDelivered,
+		DateTesting:         test.DateTesting,
+		DateOfResult:        test.DateOfResult,
+		SampleIdentifier:    test.SampleIdentifier,
+		SampleType:          test.SampleType,
+		TestType:            test.TestType,
+		Result:              test.Result,
+		Status:              test.Status,
+		OutbreakID:          test.OutbreakID,
+		TestedFor:           test.TestedFor,
+		CreatedAt:           test.CreatedAt,
+		CreatedBy:           test.CreatedBy,
+		UpdatedAt:           test.UpdatedAt,
+		Person:              person,
+		LabFacility:         labFacility,
+	}
+	return labTest
+}
+
+func findCaseInCases(caseId string, cases []models.Case) models.Case {
+	var person models.Case
+	for i, _ := range cases {
+		if caseId == cases[i].ID {
+			person = cases[i]
+			break
+		}
+	}
+	return person
 }
