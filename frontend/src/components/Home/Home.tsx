@@ -15,6 +15,14 @@ const Home = () => {
             height={'large'}
             align={'center'}
             justify={'center'}
+            gap={'medium'}
+            pad={'small'}
+            margin={{
+              left: 'small',
+              bottom: 'xxsmall',
+              right: 'small',
+              top: 'small',
+            }}
           >
             <LabTestsSearch />
           </Box>

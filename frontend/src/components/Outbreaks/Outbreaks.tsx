@@ -109,7 +109,6 @@ export const OutbreakPage = () => {
         <Box>
           <Header children={<PageMenus />} />
           <OutbreakGrid outbreaks={outbreakData.outbreaks} />
-          <OutbreakGrid outbreaks={outbreakData.outbreaks} />
         </Box>
       </Main>
     </Grommet>
