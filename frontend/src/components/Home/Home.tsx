@@ -14,8 +14,8 @@ const Home = () => {
             background={'light-1'}
             height={'large'}
             align={'center'}
-            justify={'center'}
-            gap={'medium'}
+            justify={'start'}
+            gap={'large'}
             pad={'small'}
             margin={{
               left: 'small',
