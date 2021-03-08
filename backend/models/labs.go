@@ -33,7 +33,7 @@ type Person struct {
 
 type LabTest struct {
 	ID                  string      `json:"id"`
-	LabName             string      `json:"string"`
+	LabName             string      `json:"labName"`
 	PersonType          string      `json:"personType"`
 	DateSampleTaken     time.Time   `json:"dateSampleTaken"`
 	DateSampleDelivered time.Time   `json:"dateSampleDelivered"`
