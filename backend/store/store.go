@@ -204,6 +204,20 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 		}
 	}
 
+	status, err := models.ParseLabTestStatus(test.Status)
+	if err != nil {
+		status = "N/A"
+	}
+
+	testType, testTypeErr := models.ParseLabTestType(test.TestType)
+	if testTypeErr != nil {
+		testType = "N/A"
+	}
+
+	testResult, testResultErr := models.ParseLabTestResult(test.Result)
+	if testResultErr != nil {
+		testResult = "N/A"
+	}
 	labTest := models.LabTest{
 		ID:                  test.ID,
 		LabName:             labFacility.Name,
@@ -214,9 +228,9 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 		DateOfResult:        test.DateOfResult,
 		SampleIdentifier:    test.SampleIdentifier,
 		SampleType:          test.SampleType,
-		TestType:            test.TestType,
-		Result:              test.Result,
-		Status:              test.Status,
+		TestType:            testType,
+		Result:              testResult,
+		Status:              status,
 		OutbreakID:          test.OutbreakID,
 		TestedFor:           test.TestedFor,
 		CreatedAt:           test.CreatedAt,

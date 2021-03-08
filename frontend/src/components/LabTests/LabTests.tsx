@@ -49,11 +49,6 @@ const rows = (test: LabTest) => {
       </TableCell>
       <TableCell wrap={true}>
         <Text size={'small'} truncate={true} wordBreak={'break-all'}>
-          {test.sampleType}
-        </Text>
-      </TableCell>
-      <TableCell wrap={true}>
-        <Text size={'small'} truncate={true} wordBreak={'break-all'}>
           {test.status}
         </Text>
       </TableCell>
@@ -95,9 +90,6 @@ const LabTestTable = (props: LabTestTableProps) => {
           </TableCell>
           <TableCell>
             <Text size={'small'}>Test Type</Text>
-          </TableCell>
-          <TableCell>
-            <Text size={'small'}>Sample Type</Text>
           </TableCell>
           <TableCell>
             <Text size={'small'}>Status</Text>
