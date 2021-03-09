@@ -218,6 +218,10 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 	if testResultErr != nil {
 		testResult = "N/A"
 	}
+	personAge := age.AgeAt(person.Dob, time.Now())
+	if test.DateTesting != nil {
+		personAge = age.AgeAt(person.Dob, *test.DateTesting)
+	}
 	labTest := models.LabTest{
 		ID:                  test.ID,
 		LabName:             labFacility.Name,
@@ -241,11 +245,37 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 			LastName:  person.LastName,
 			Gender:    person.Gender,
 			Dob:       person.Dob,
-			Age:       age.AgeAt(person.Dob, test.DateTesting),
+			Age:       personAge,
 		},
 		LabFacility: labFacility,
 	}
 	return labTest
+}
+
+// LabTestById searches for a lab test that has the specified id.
+func (s *Store) LabTestById(ctx context.Context, id string) (models.LabTest, error) {
+	labCol := s.Client.Database(s.Database).Collection(labCollection)
+	filter := bson.D{{"_id", id}}
+	var rawLabTest models.RawLabTest
+	err := labCol.FindOne(ctx, filter).Decode(&rawLabTest)
+	if err != nil {
+		return models.LabTest{}, MongoQueryErr{
+			Reason: "LabTestById() error",
+			Inner:  err,
+		}
+	}
+	personCol := s.Client.Database(s.Database).Collection(personCollection)
+	personFilter := bson.D{{"_id", rawLabTest.PersonId}}
+	var person models.Case
+	personErr := personCol.FindOne(ctx, personFilter).Decode(&person)
+	if personErr != nil {
+		return models.LabTest{}, MongoQueryErr{
+			Reason: "LabTestById() error querying person",
+			Inner:  personErr,
+		}
+	}
+	labTest := RawLabTestToLabTest(rawLabTest, person)
+	return labTest, nil
 }
 
 func findCaseInCases(caseId string, cases []models.Case) models.Case {
