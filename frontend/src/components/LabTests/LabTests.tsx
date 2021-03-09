@@ -8,8 +8,9 @@ import {
   TableRow,
   Text,
 } from 'grommet';
+import { Print } from 'grommet-icons';
 
-const rows = (test: LabTest) => {
+const rows = (test: LabTest, printUrl: string) => {
   return (
     <TableRow key={test.id}>
       <TableCell wrap={true}>
@@ -57,12 +58,26 @@ const rows = (test: LabTest) => {
           {test.result}
         </Text>
       </TableCell>
+      <TableCell
+        onClick={() => {
+          if (test.status === 'COMPLETED') {
+            window.open(
+              `${printUrl}?testId=${test.id}`,
+              '_blank',
+              'toolbar=no'
+            );
+          }
+        }}
+      >
+        {test.status === 'COMPLETED' && <Print />}
+      </TableCell>
     </TableRow>
   );
 };
 
 interface LabTestTableProps {
   labTests: LabTest[];
+  printUrl: string;
 }
 const LabTestTable = (props: LabTestTableProps) => {
   const { labTests } = props;
@@ -97,19 +112,21 @@ const LabTestTable = (props: LabTestTableProps) => {
           <TableCell>
             <Text size={'small'}>Result</Text>
           </TableCell>
+          <TableCell />
         </TableRow>
       </TableHeader>
-      <TableBody>{labTests.map((l) => rows(l))}</TableBody>
+      <TableBody>{labTests.map((l) => rows(l, props.printUrl))}</TableBody>
     </Table>
   );
 };
 
 export interface LabTestsProps {
   labTests: LabTest[];
+  printUrl: string;
 }
 const LabTests = (props: LabTestsProps) => {
-  const { labTests } = props;
-  return <LabTestTable labTests={labTests} />;
+  const { labTests, printUrl } = props;
+  return <LabTestTable labTests={labTests} printUrl={printUrl} />;
 };
 
 export default LabTests;

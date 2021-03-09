@@ -13,11 +13,13 @@ const LabTestResultSearch = () => {
   const [formState, setFormState] = React.useState<LabTestSearchFormState>();
   const [labTests, setLabTests] = React.useState<LabTest[]>();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { httpInstance } = useHttpApi();
+  const { httpInstance, baseUrl } = useHttpApi();
   const onSubmit = (event: FormExtendedEvent<LabTestSearchFormState>) => {
     setLoading(true);
     setFormState(event.value);
   };
+
+  const printUrl = `${baseUrl}/labtest/pdf`;
 
   React.useEffect(() => {
     // console.log('set state: ', formState);
@@ -69,7 +71,9 @@ const LabTestResultSearch = () => {
               </Box>
             )}
             {!loading && <LabTestsSearch onSubmit={onSubmit} />}
-            {!loading && labTests && <LabTests labTests={labTests} />}
+            {!loading && labTests && (
+              <LabTests labTests={labTests} printUrl={printUrl} />
+            )}
             {!loading && labTests?.length == 0 && formState && (
               <Heading level={4}>No Results Found.</Heading>
             )}
