@@ -4,10 +4,12 @@ import (
 	"bytes"
 	csv2 "bz.moh.epi/godatatools/csv"
 	"bz.moh.epi/godatatools/models"
+	"bz.moh.epi/godatatools/printers"
 	"encoding/csv"
 	"encoding/json"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 )
 
 func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +81,7 @@ func (s Server) LabTestResults(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "GET only", http.StatusBadRequest)
 	}
 
-	// Get the case id from the url path
+	// Get the case names from the url path
 	query := r.URL.Query()
 	firstName := query.Get("firstName")
 	if len(firstName) == 0 {
@@ -114,4 +116,46 @@ func (s Server) LabTestResults(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+}
+
+func (s Server) LabTestPdfHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, "GET Only", http.StatusBadRequest)
+		return
+	}
+
+	// get the test id from the url path
+	query := r.URL.Query()
+	testId := query.Get("testId")
+	if len(testId) == 0 {
+		http.Error(w, "please provide a testId", http.StatusBadRequest)
+		return
+	}
+	labTest, err := s.DbRepository.LabTestById(r.Context(), testId)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	m, pdfErr := printers.PdfPrinter(labTest)
+	if pdfErr != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	buff, _ := m.Output()
+	w.Header().Add("Content-Type", "application/pdf")
+	w.Header().Set("Content-Length", strconv.Itoa(len(buff.Bytes())))
+	if _, err := w.Write(buff.Bytes()); err != nil {
+		log.WithFields(log.Fields{
+			"testId": testId,
+		}).WithError(err).Error("failed to stream pdf")
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	return
+
 }

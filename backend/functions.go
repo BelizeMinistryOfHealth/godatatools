@@ -59,6 +59,11 @@ func HandlerLabTestSearchResult(w http.ResponseWriter, r *http.Request) {
 	mid.Then(server.LabTestResults)(w, r)
 }
 
+func HandlerLabTestPrinter(w http.ResponseWriter, r *http.Request) {
+	mid := NewChain(EnableCors())
+	mid.Then(server.LabTestPdfHandler)(w, r)
+}
+
 // Server is exposed to modify the Server settings
 func GetServer() *Server {
 	return &server
@@ -69,4 +74,5 @@ func (s Server) RegisterHandlers() {
 	http.HandleFunc("/auth", HandlerGoDataAuth)
 	http.HandleFunc("/outbreaks", HandlerOutbreaks)
 	http.HandleFunc("/labTests/searchByName", HandlerLabTestSearchResult)
+	http.HandleFunc("/labtest/pdf", HandlerLabTestPrinter)
 }
