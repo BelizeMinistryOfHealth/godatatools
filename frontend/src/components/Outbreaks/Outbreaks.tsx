@@ -108,7 +108,20 @@ export const OutbreakPage = () => {
       <Main justify={'evenly'} background={'dark-3'} responsive={true}>
         <Box>
           <Header children={<PageMenus />} />
-          <OutbreakGrid outbreaks={outbreakData.outbreaks} />
+          <Box
+            background={'light-1'}
+            height={'large'}
+            gap={'small'}
+            pad={'small'}
+            margin={{
+              left: 'small',
+              bottom: 'xxsmall',
+              right: 'small',
+              top: 'small',
+            }}
+          >
+            <OutbreakGrid outbreaks={outbreakData.outbreaks} />
+          </Box>
         </Box>
       </Main>
     </Grommet>
