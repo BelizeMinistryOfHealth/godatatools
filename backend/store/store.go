@@ -54,12 +54,21 @@ func (s *Store) FindCasesByOutbreak(ctx context.Context, ID string) ([]models.Ca
 	}
 
 	if err := cursor.All(ctx, &cases); err != nil {
+		curr := cursor.ID()
 		return cases, MongoQueryErr{
-			Reason: fmt.Sprintf("failed to decode the result of cases for the outbreak: %s", ID),
+			Reason: fmt.Sprintf("failed to decode the result of cases for the outbreak: %s curr: %v", ID, curr),
 			Inner:  err,
 		}
 	}
-	return cases, nil
+
+	var result []models.Case
+	for _, c := range cases {
+		if c.Questionnaire.BhisNumber != nil {
+			c.Bhis = c.Questionnaire.BhisNumber[0].Value
+		}
+		result = append(result, c)
+	}
+	return result, nil
 }
 
 // FindCasesByReportingDate returns the cases reported in the specified date for the designated outbreak.

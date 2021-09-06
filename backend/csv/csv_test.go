@@ -25,7 +25,6 @@ func TestWriteCases(t *testing.T) {
 
 	cases, _ := store.FindCasesByOutbreak(ctx, outbreakId)
 
-
 	f, err := os.Create("users.csv")
 	defer f.Close()
 	//b := &bytes.Buffer{}

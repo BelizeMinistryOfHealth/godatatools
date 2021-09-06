@@ -1,7 +1,6 @@
 package store
 
 import (
-	"bz.moh.epi/godatatools/models"
 	"context"
 	"fmt"
 	"os"
@@ -33,13 +32,13 @@ func TestStore_FindCasesByOutbreak(t *testing.T) {
 		t.Errorf("FindCasesByOutbreak() should return a non-empty list")
 	}
 
-	var hospitalizationCases []models.Case
-	for _, c := range cases {
-		if c.Hospitalizations != nil && len(c.Hospitalizations) > 0 {
-			hospitalizationCases = append(hospitalizationCases, c)
-		}
-	}
-	//t.Logf("hospitalizations: %v", hospitalizationCases)
+	//var hospitalizationCases []models.Case
+	//for _, c := range cases {
+	//	if c.Hospitalizations != nil && len(c.Hospitalizations) > 0 {
+	//		hospitalizationCases = append(hospitalizationCases, c)
+	//	}
+	//}
+
 }
 
 func TestStore_ListOutbreaks(t *testing.T) {

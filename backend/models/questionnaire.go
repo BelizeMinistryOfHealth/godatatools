@@ -10,6 +10,10 @@ type DateAnswer struct {
 	Value interface{} `json:"value"`
 }
 
+type IntAnswer struct {
+	Value int `json:"value"`
+}
+
 type CaseForm struct {
 	Value []string `json:"value"`
 }
@@ -83,4 +87,5 @@ type Questionnaire struct {
 	RespSampleCollected                           []QuestionnaireAnswer `bson:"FA0_respiratorysample_collectedYN" json:"FA0_respiratorysample_collectedYN"`
 	RespiratorySampleDateCollected                []DateAnswer          `bson:"FA0_respiratorysample_datecollected" json:"FA0_respiratorysample_datecollected"`
 	MechanicalVentilation                         []QuestionnaireAnswer `bson:"FA0_clinicalcomplications_mechanicalventilation" json:"FA0_clinicalcomplications_mechanicalventilation"`
+	BhisNumber                                    []IntAnswer           `bson:"bhis_number" json:"bhis_number"`
 }

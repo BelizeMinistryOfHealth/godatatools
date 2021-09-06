@@ -32,7 +32,7 @@ func (s Server) AuthWithGodata(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"godata": s.GoData,
-			"creds": creds,
+			"creds":  creds,
 		}).WithError(err).Error("authentication failed")
 		http.Error(w, "failed to authenticate", http.StatusUnauthorized)
 		return

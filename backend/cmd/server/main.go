@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func main()  {
+func main() {
 	server := godatatools.GetServer()
 	server.RegisterHandlers()
 
