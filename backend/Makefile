@@ -17,7 +17,7 @@ build-linux:
 build-macos:
 	export GO111MODULE=on
 	env GOOS=darwin go build -o bin/godatatools cmd/server/main.go
-	chomd +x bin/godatatools
+	chmod +x bin/godatatools
 
 
 clean:
