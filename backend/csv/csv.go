@@ -302,7 +302,13 @@ func WriteCases(writer *csv.Writer, cases []models.Case) error {
 		record = append(record, contactDate)
 		var dateTravelFrom string
 		if len(questionnaire.PriorXdayExposureInternationalDateTravelFrom) > 0 && questionnaire.PriorXdayExposureInternationalDateTravelFrom[0].Value != nil {
-			dateTravelFrom = questionnaire.PriorXdayExposureInternationalDateTravelFrom[0].Value.(string)
+			switch questionnaire.PriorXdayExposureInternationalDateTravelFrom[0].Value.(type) {
+			case string:
+				dateTravelFrom = questionnaire.PriorXdayExposureInternationalDateTravelFrom[0].Value.(string)
+			case primitive.DateTime:
+				d := questionnaire.PriorXdayExposureInternationalDateTravelFrom[0].Value.(primitive.DateTime)
+				dateTravelFrom = d.Time().Format("2006-01-02")
+			}
 		}
 		record = append(record, dateTravelFrom)
 		var intlTravelDate string
