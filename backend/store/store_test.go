@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const isoLayout string = "2006-01-02"
+
 func TestStore_FindCasesByOutbreak(t *testing.T) {
 	database := os.Getenv("MONGO_DB")
 	uri := os.Getenv("MONGO_URI")
@@ -188,4 +190,58 @@ func TestStore_LabTestById(t *testing.T) {
 	if len(labTest.ID) == 0 {
 		t.Errorf("LabTestsByCaseName() expected non-empty list")
 	}
+}
+
+func TestStore_FindCasesByPersonIds(t *testing.T) {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+	ctx := context.Background()
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	defer store.Disconnect(ctx)
+
+	ids := []string{"39234b89-05a0-4417-b97f-4fb56e29360f", "1c299f2e-21f5-4164-9e58-88a0540ab75d", "67c31286-1ba7-4f79-a43a-eff76c61dc2d"}
+	cases, err := store.FindCasesByPersonIds(ctx, ids)
+	if err != nil {
+		t.Fatalf("FindCasesByPersonIds() failed: %v", err)
+	}
+
+	t.Logf("cases: %v", cases)
+}
+
+func TestStore_FindLabTestsByDateRange(t *testing.T) {
+	ctx := context.Background()
+	store := setupDb(t, ctx)
+	defer store.Disconnect(ctx)
+
+	startDate, _ := time.Parse(isoLayout, "2021-12-21")
+	endDate, _ := time.Parse(isoLayout, "2021-12-31")
+
+	labTests, err := store.FindLabTestsByDateRange(ctx, &startDate, &endDate)
+	if err != nil {
+		t.Fatalf("FindLabTestsByDateRange failed: %v", err)
+	}
+	t.Logf("labTests: %v", labTests)
+
+}
+
+func setupDb(t *testing.T, ctx context.Context) Store {
+	database := os.Getenv("MONGO_DB")
+	uri := os.Getenv("MONGO_URI")
+	store, err := New(uri, database)
+	if err != nil {
+		t.Fatalf("failed to create the mongo client: %v", err)
+	}
+
+	//connect
+	if err := store.Connect(ctx); err != nil {
+		t.Fatalf("failed to connect to mongo: %v", err)
+	}
+	return store
 }

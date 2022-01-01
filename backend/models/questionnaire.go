@@ -32,6 +32,7 @@ type Address struct {
 	Date         *time.Time   `bson:"date" json:"date"`
 	PhoneNumber  string       `json:"phoneNumber"`
 	LocationId   string       `json:"locationId"`
+	PostalCode   string       `json:"postalCode"`
 	GeoLocation  *GeoLocation `json:"geoLocation,omitempty"`
 }
 
@@ -40,7 +41,7 @@ type PersonAge struct {
 	Months int `json:"months"`
 }
 
-// GoDataQuestionnaire represents the GoData questionnaire. GoData stores these as a flat list.
+// Questionnaire represents the GoData questionnaire. GoData stores these as a flat list.
 // The CaseForm identifies the forms, and GoData uses this to extract the fields for each form from the
 // flat list of questions.
 type Questionnaire struct {

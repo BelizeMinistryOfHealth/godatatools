@@ -19,6 +19,10 @@ build-macos:
 	env GOOS=darwin go build -o bin/godatatools cmd/server/main.go
 	chmod +x bin/godatatools
 
+build-location-importer:
+	export GO111MODULE=on
+	env GOOS=darwin go build -o bin/location_importer cmd/locations/main.go
+	chmod +x bin/location_importer
 
 clean:
 	rm -rf ./bin Gopkg.lock

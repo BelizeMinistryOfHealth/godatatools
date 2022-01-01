@@ -20,7 +20,8 @@ type RawLabTest struct {
 	TestedFor           string     `json:"testedFor"`
 	CreatedAt           time.Time  `bson:"createdAt" json:"createdAt"`
 	CreatedBy           string     `json:"createdBy"`
-	UpdatedAt           time.Time  `bson:"updatedAt" json:"updatedAt"`
+	UpdatedAt           *time.Time `bson:"updatedAt" json:"updatedAt"`
+	UpdatedBy           string     `bson:"updatedBy" json:"updatedBy"`
 }
 
 type Person struct {
@@ -48,8 +49,56 @@ type LabTest struct {
 	TestedFor           string      `json:"testedFor"`
 	CreatedAt           time.Time   `json:"createdAt"`
 	CreatedBy           string      `json:"createdBy"`
-	UpdatedAt           time.Time   `json:"updatedAt"`
+	UpdatedAt           *time.Time  `json:"updatedAt"`
+	UpdatedBy           string      `json:"updatedBy"`
 	Person              Person      `json:"person"`
+	LabFacility         LabFacility `json:"labFacility"`
+}
+
+type LabTestCase struct {
+	ID             string           `bson:"_id" json:"id"`
+	VisualID       string           `json:"visualId"`
+	Bhis           int              `json:"bhis"`
+	ReportingDate  time.Time        `bson:"dateOfReporting" json:"dateOfReporting"`
+	CreatedAt      time.Time        `json:"createdAt"`
+	CreatedBy      string           `json:"createdBy"`
+	FirstName      string           `json:"firstName"`
+	LastName       string           `json:"lastName"`
+	MiddleName     string           `json:"middleName"`
+	Gender         string           `json:"gender"`
+	Occupation     string           `json:"occupation"`
+	Dob            time.Time        `json:"dob"`
+	Classification string           `json:"classification"`
+	DateBecameCase *time.Time       `json:"dateBecomeCase"`
+	DateOfOnset    *time.Time       `json:"dateOfOnset"`
+	RiskLevel      string           `json:"riskLevel"`
+	RiskReason     string           `json:"riskReason"`
+	Outcome        string           `json:"outcomeId"`
+	DateOfOutcome  *time.Time       `json:"dateOfOutcome"`
+	Addresses      []Address        `json:"addresses"`
+	Location       *AddressLocation `json:"location"`
+}
+
+type LabTestReport struct {
+	ID                  string      `json:"id"`
+	LabName             string      `json:"labName"`
+	PersonType          string      `json:"personType"`
+	DateSampleTaken     *time.Time  `json:"dateSampleTaken"`
+	DateSampleDelivered *time.Time  `json:"dateSampleDelivered"`
+	DateTesting         *time.Time  `json:"dateTesting"`
+	DateOfResult        *time.Time  `json:"dateOfResult"`
+	SampleIdentifier    string      `json:"sampleIdentifier"`
+	SampleType          string      `json:"sampleType"`
+	TestType            string      `json:"testType"`
+	Result              string      `json:"result"`
+	Status              string      `json:"status"`
+	OutbreakID          string      `json:"outbreakId"`
+	TestedFor           string      `json:"testedFor"`
+	CreatedAt           time.Time   `json:"createdAt"`
+	CreatedBy           string      `json:"createdBy"`
+	UpdatedAt           *time.Time  `json:"updatedAt"`
+	UpdatedBy           string      `json:"updatedBy"`
+	Person              LabTestCase `json:"person"`
 	LabFacility         LabFacility `json:"labFacility"`
 }
 
