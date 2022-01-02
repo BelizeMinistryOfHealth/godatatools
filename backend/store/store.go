@@ -263,13 +263,7 @@ func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName stri
 
 // RawLabTestToLabTest converts a RawLabTest to a LabTest
 func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabTest {
-	var labFacility models.LabFacility
-	for _, l := range models.LabFacilities {
-		if test.OutbreakID == l.ID {
-			labFacility = l
-			break
-		}
-	}
+	labFacility := models.LabFacilities[test.OutbreakID]
 
 	status, err := models.ParseLabTestStatus(test.Status)
 	if err != nil {
@@ -321,13 +315,7 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 
 // RawLabTestToLabReport converts a RawLabTest to a LabReport
 func RawLabTestToLabReport(test models.RawLabTest, person models.LabTestCase) models.LabTestReport {
-	var labFacility models.LabFacility
-	for _, l := range models.LabFacilities {
-		if test.OutbreakID == l.ID {
-			labFacility = l
-			break
-		}
-	}
+	labFacility := models.LabFacilities[test.OutbreakID]
 
 	status, err := models.ParseLabTestStatus(test.Status)
 	if err != nil {
