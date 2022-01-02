@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Form,
-  FormField,
-  Heading,
-  TextInput,
-  TypedForm,
-} from 'grommet';
+import { Box, Button, Form, FormField, Heading, TextInput } from 'grommet';
 import { FormExtendedEvent } from 'grommet/components/Form';
 
 export interface LabTestSearchFormState {
@@ -18,8 +10,6 @@ export interface LabTestSearchFormState {
 export interface LabTestsSearchProps<T> {
   onSubmit?: (event: FormExtendedEvent<T>) => void;
 }
-
-const LabTestsSearchForm = Form as TypedForm<LabTestSearchFormState>;
 
 const LabTestsSearch = (props: LabTestsSearchProps<LabTestSearchFormState>) => {
   const { onSubmit } = props;
@@ -37,7 +27,7 @@ const LabTestsSearch = (props: LabTestsSearchProps<LabTestSearchFormState>) => {
         Search For Lab Tests
       </Heading>
 
-      <LabTestsSearchForm
+      <Form
         value={value}
         onChange={(nextValue: LabTestSearchFormState, { touched }: any) => {
           setValue(nextValue);
@@ -74,7 +64,7 @@ const LabTestsSearch = (props: LabTestsSearchProps<LabTestSearchFormState>) => {
             />
           </Box>
         </Box>
-      </LabTestsSearchForm>
+      </Form>
     </Box>
   );
 };

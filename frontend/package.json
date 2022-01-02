@@ -5,8 +5,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "date-fns": "^2.19.0",
-    "grommet": "^2.16.3",
-    "grommet-icons": "^4.5.0",
+    "grommet": "^2.19.1",
+    "grommet-icons": "^4.7.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

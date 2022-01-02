@@ -1720,11 +1720,6 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@scarf/scarf@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@scarf/scarf/-/scarf-1.1.0.tgz#b84b4a91cd938a688d36245b7a7db6fbc476a499"
-  integrity sha512-b2iE8kjjzzUo2WZ0xuE2N77kfnTds7ClrDxcz3Atz7h2XrNVoAPUoT75i7CY0st5x++70V91Y+c6RpBX9MX7Jg==
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"
@@ -5774,10 +5769,10 @@ graceful-fs@^4.2.4:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.6.tgz#ff040b2b0853b23c3d31027523706f1885d76bee"
   integrity sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==
 
-grommet-icons@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.5.0.tgz#855ad26338ea1a1503eb18fdae428c431332be6a"
-  integrity sha512-q7TNXV996fDh2e++7WapiNFUk0UEll17iEZ2d75W4yz+8Bb3+vdQ1MeT/d1RRlM0pV2KnTpSeR00GeN4KA9upg==
+grommet-icons@^4.6.2, grommet-icons@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/grommet-icons/-/grommet-icons-4.7.0.tgz#1d537b2bdc507be07d5643309d433bbe1464c5b6"
+  integrity sha512-ptw8x86Age/Yz6SplCLtJ8q1z/4ZLktMruCOnE6oTgc7hcIV/8ieOucTrLbu+PDi7rKxoP321O3OG3Zo/3qXjw==
   dependencies:
     grommet-styles "^0.2.0"
 
@@ -5786,17 +5781,15 @@ grommet-styles@^0.2.0:
   resolved "https://registry.yarnpkg.com/grommet-styles/-/grommet-styles-0.2.0.tgz#b2eac2b7e2747cb523434d21728ce5234f8ce4f4"
   integrity sha512-0OMSYuGeyifYKpg4Gv2HzL8rUdd0ddnJ5LbCBKgDuloC71XIwr9g/Fxa6rs737MbPV7OZ4pEm4wvrjH4epzf1A==
 
-grommet@^2.16.3:
-  version "2.16.3"
-  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.16.3.tgz#f3680d100e6150195b60a7f14433eef744d5a4d2"
-  integrity sha512-q/je53d5AoCpokqXIJHzIIXpRMej9cjsdGt/BkWbTizF+36OWQ67Aqw8f4kK8YfAOxZ267gRj1Y1mDFva3duYw==
+grommet@^2.19.1:
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/grommet/-/grommet-2.19.1.tgz#50b706a87cb6289abd10322c256b00336d86a1b1"
+  integrity sha512-tnFLACh0+eaHGUia79C8SFctsQBce9kQcNjOEM8WemlSFv8/0hUJLuaEvgdcGw9ZL22i8g/0s6m+tuJAqvQmYg==
   dependencies:
-    grommet-icons "^4.5.0"
+    grommet-icons "^4.6.2"
     hoist-non-react-statics "^3.2.0"
-    markdown-to-jsx "^6.11.4"
-    polished "^3.4.1"
+    markdown-to-jsx "^7.1.3"
     prop-types "^15.7.2"
-    react-desc "^4.1.2"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -7571,13 +7564,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-markdown-to-jsx@^6.11.4:
-  version "6.11.4"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-6.11.4.tgz#b4528b1ab668aef7fe61c1535c27e837819392c5"
-  integrity sha512-3lRCD5Sh+tfA52iGgfs/XZiw33f7fFX9Bn55aNnVNUd2GzLDkOWyKYYD8Yju2B1Vn+feiEdgJs8T6Tg0xNokPw==
-  dependencies:
-    prop-types "^15.6.2"
-    unquote "^1.1.0"
+markdown-to-jsx@^7.1.3:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.1.5.tgz#caf72ad8a8c34a2bb692c4d17e44aabbe4eb19fd"
+  integrity sha512-YQEMMMCX3PYOWtUAQu8Fmz5/sH09s17eyQnDubwaAo8sWmnRTT1og96EFv1vL59l4nWfmtF3L91pqkuheVqRlA==
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -8630,14 +8620,6 @@ pnp-webpack-plugin@1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
-polished@^3.4.1:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-3.7.0.tgz#ece3368df30d33082bc8a957aa212d3f98119278"
-  integrity sha512-1tnvQ2wsxfR/DyPE2Xu9sRbnLAwXAarCWiZJ8Hfirw59bTigqjbzEWSAmzYizT6ocQW995V8n7RP48jq50DjJA==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@scarf/scarf" "^1.1.0"
-
 portfinder@^1.0.26:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"
@@ -9597,11 +9579,6 @@ react-app-polyfill@^2.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
-
-react-desc@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/react-desc/-/react-desc-4.1.2.tgz#83fc4ede66b2d45ae4ef63c18421474d55972966"
-  integrity sha512-JAVe89uaLr0HZ0IKodnpTPNgNyJ/SPDQnl3VJPVwI+SpebmHvJiBNZEOwX201QmSbsVGqRY8ql/VFPlAx85WzA==
 
 react-dev-utils@^11.0.2:
   version "11.0.2"
@@ -11543,7 +11520,7 @@ unpipe@1.0.0, unpipe@~1.0.0:
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
 
-unquote@^1.1.0, unquote@~1.1.1:
+unquote@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/unquote/-/unquote-1.1.1.tgz#8fded7324ec6e88a0ff8b905e7c098cdc086d544"
   integrity sha1-j97XMk7G6IoP+LkF58CYzcCG1UQ=

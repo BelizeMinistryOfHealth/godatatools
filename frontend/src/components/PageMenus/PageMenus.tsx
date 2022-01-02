@@ -10,6 +10,10 @@ export const PageMenus = () => {
       <Box onClick={() => history.push('/export_tools')}>Export Tool</Box>
       <Box> | </Box>
       <Box onClick={() => history.push('/lab_test/results/search')}>Search</Box>
+      <Box> | </Box>
+      <Box onClick={() => history.push('/lab_test/exports')}>
+        Lab Test Export
+      </Box>
     </Box>
   );
 };
