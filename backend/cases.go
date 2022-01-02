@@ -24,6 +24,7 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.URL.Query()
+
 	outbreakId := query.Get("outbreakId")
 	if len(outbreakId) == 0 {
 		http.Error(w, "outbreakId was not provided", http.StatusBadRequest)

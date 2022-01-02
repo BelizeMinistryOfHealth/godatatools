@@ -65,7 +65,7 @@ func HandlerLabTestPrinter(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlerLabTestsReportsCsv(w http.ResponseWriter, r *http.Request) {
-	mid := NewChain(EnableCors())
+	mid := NewChain(EnableCors(), FileTransferType())
 	mid.Then(server.LabTestsByDateRange)(w, r)
 }
 
