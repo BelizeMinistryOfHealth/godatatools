@@ -436,7 +436,7 @@ func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate 
 	filter := bson.M{
 		"$and": bson.A{
 			bson.M{"createdAt": bson.M{"$gte": startDate}},
-			bson.M{"createdAt": bson.M{"$lt": endDate}},
+			bson.M{"createdAt": bson.M{"$lt": endDate.Add(time.Hour * 24)}},
 		},
 	}
 
