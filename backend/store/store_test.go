@@ -11,21 +11,15 @@ import (
 const isoLayout string = "2006-01-02"
 
 func TestStore_FindCasesByOutbreak(t *testing.T) {
-	database := os.Getenv("MONGO_DB")
-	uri := os.Getenv("MONGO_URI")
 	outbreakId := os.Getenv("OUTBREAK_ID")
-	store, err := New(uri, database)
-	if err != nil {
-		t.Fatalf("failed to create the mongo client: %v", err)
-	}
 	ctx := context.Background()
-	//connect
-	if err := store.Connect(ctx); err != nil {
-		t.Fatalf("failed to connect to mongo: %v", err)
-	}
+	store := setupDb(t, ctx)
 	defer store.Disconnect(ctx)
 
-	cases, err := store.FindCasesByOutbreak(ctx, outbreakId)
+	startDate, _ := time.Parse(isoLayout, "2021-12-21")
+	endDate, _ := time.Parse(isoLayout, "2021-12-31")
+
+	cases, err := store.FindCasesByOutbreak(ctx, outbreakId, &startDate, &endDate)
 	if err != nil {
 		t.Fatalf(fmt.Sprintf("FindCasesByOutbreak(): failed: %v", err))
 	}
@@ -33,13 +27,6 @@ func TestStore_FindCasesByOutbreak(t *testing.T) {
 	if len(cases) == 0 {
 		t.Errorf("FindCasesByOutbreak() should return a non-empty list")
 	}
-
-	//var hospitalizationCases []models.Case
-	//for _, c := range cases {
-	//	if c.Hospitalizations != nil && len(c.Hospitalizations) > 0 {
-	//		hospitalizationCases = append(hospitalizationCases, c)
-	//	}
-	//}
 
 }
 

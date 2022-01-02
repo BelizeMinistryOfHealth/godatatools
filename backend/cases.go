@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +30,41 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cases, err := s.DbRepository.FindCasesByOutbreak(r.Context(), outbreakId)
+	startDateQuery := query.Get("startDate")
+	if len(startDateQuery) == 0 {
+		http.Error(w, "startDate was not provided", http.StatusBadRequest)
+		return
+	}
+	startDate, err := time.Parse(isoLayout, startDateQuery)
+	if err != nil {
+		log.WithError(err).Errorf("error parsing startDate: %s", startDateQuery)
+		http.Error(w, "invalid startDate", http.StatusBadRequest)
+		return
+	}
+	endDateQuery := query.Get("endDate")
+	if len(endDateQuery) == 0 {
+		log.WithError(err).Errorf("error parsing endDate: %s", endDateQuery)
+		http.Error(w, "endDate was not provided", http.StatusBadRequest)
+		return
+	}
+	endDate, err := time.Parse(isoLayout, endDateQuery)
+	if err != nil {
+		http.Error(w, "invalid endDate", http.StatusBadRequest)
+		return
+	}
+
+	if startDate.After(endDate) {
+		http.Error(w, "startDate must be before endDate", http.StatusBadRequest)
+		return
+	}
+
+	if endDate.Sub(startDate) > time.Hour*24*31 {
+		log.Error("ate range is too high (over 31 days)!")
+		http.Error(w, "date range is too high (over 31 days)!", http.StatusBadRequest)
+		return
+	}
+
+	cases, err := s.DbRepository.FindCasesByOutbreak(r.Context(), outbreakId, &startDate, &endDate)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		log.WithFields(log.Fields{

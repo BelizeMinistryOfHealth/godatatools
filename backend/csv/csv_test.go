@@ -6,7 +6,10 @@ import (
 	"encoding/csv"
 	"os"
 	"testing"
+	"time"
 )
+
+const isoLayout string = "2006-01-02"
 
 func TestWriteCases(t *testing.T) {
 	database := os.Getenv("MONGO_DB")
@@ -22,8 +25,9 @@ func TestWriteCases(t *testing.T) {
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
 	defer store.Disconnect(ctx)
-
-	cases, _ := store.FindCasesByOutbreak(ctx, outbreakId)
+	startDate, _ := time.Parse(isoLayout, "2021-12-21")
+	endDate, _ := time.Parse(isoLayout, "2021-12-31")
+	cases, _ := store.FindCasesByOutbreak(ctx, outbreakId, &startDate, &endDate)
 
 	f, err := os.Create("users.csv")
 	defer f.Close()

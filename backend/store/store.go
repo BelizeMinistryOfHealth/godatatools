@@ -51,10 +51,21 @@ func New(uri, database string) (Store, error) {
 	}, nil
 }
 
-func (s *Store) FindCasesByOutbreak(ctx context.Context, ID string) ([]models.Case, error) {
-	collection := s.Client.Database(s.Database).Collection(personCollection)
-	filter := bson.M{"outbreakId": ID}
+func (s *Store) FindCasesByOutbreak(ctx context.Context, ID string, startDate, endDate *time.Time) ([]models.Case, error) {
 	var cases []models.Case
+
+	if startDate.After(*endDate) {
+		return cases, fmt.Errorf("startDate must be before endDate")
+	}
+	collection := s.Client.Database(s.Database).Collection(personCollection)
+	filter := bson.M{
+		"outbreakId": ID,
+		"$and": bson.A{
+			bson.M{"createdAt": bson.M{
+				"$gte": startDate}},
+			bson.M{"createdAt": bson.M{
+				"$lt": endDate.Add(time.Hour * 24)}},
+		}}
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		return cases, MongoQueryErr{
