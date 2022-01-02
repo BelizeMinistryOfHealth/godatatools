@@ -12,7 +12,6 @@ import {
 } from 'grommet';
 import { PageMenus } from '../PageMenus/PageMenus';
 import Header from '../Header/Header';
-import { FormExtendedEvent } from 'grommet/components/Form';
 import { differenceInDays, format, isAfter, parseISO } from 'date-fns';
 import { useHttpApi } from '../../providers/HttpProvider';
 
@@ -30,7 +29,6 @@ const LabExports = (): JSX.Element => {
 
   const onChangeRangeNoTZ = (event: { value: any }) => {
     const nextValue = event.value;
-    console.log('onChange', nextValue);
     setDateRangeNoTZ(nextValue);
   };
 
