@@ -69,20 +69,11 @@ export const OutbreakGrid = (props: { outbreaks: Outbreak[] }) => {
     }
     const url = `${httpInstance.getBaseUrl()}/casesByOutbreak?outbreakId=${
       selectedOutbreak?._id
-    }?startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(
+    }&startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(
       endDate,
       'yyyy-MM-dd'
     )}`;
-    console.log('url: ', url);
-    window.open(
-      `${httpInstance.getBaseUrl()}/casesByOutbreak?outbreakId=${
-        selectedOutbreak?._id
-      }&startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(
-        endDate,
-        'yyyy-MM-dd'
-      )}`,
-      '_blank'
-    );
+    window.open(url, '_blank');
     setDateRangeNoTZ([]);
     setSelectedOutbreak(null);
   };
