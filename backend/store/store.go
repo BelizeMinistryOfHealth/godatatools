@@ -313,6 +313,7 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 		CreatedBy:           test.CreatedBy,
 		UpdatedAt:           test.UpdatedAt,
 		Person: models.Person{
+			ID:        person.ID,
 			FirstName: person.FirstName,
 			LastName:  person.LastName,
 			Gender:    person.Gender,
@@ -363,6 +364,7 @@ func RawLabTestToLabReport(test models.RawLabTest, person models.LabTestCase) mo
 		UpdatedAt:           test.UpdatedAt,
 		UpdatedBy:           test.UpdatedBy,
 		Person: models.LabTestCase{
+			ID:             person.ID,
 			FirstName:      person.FirstName,
 			LastName:       person.LastName,
 			MiddleName:     person.MiddleName,

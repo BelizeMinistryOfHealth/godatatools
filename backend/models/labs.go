@@ -25,6 +25,7 @@ type RawLabTest struct {
 }
 
 type Person struct {
+	ID        string    `json:"personId"`
 	FirstName string    `json:"firstName"`
 	LastName  string    `json:"lastName"`
 	Gender    string    `json:"gender"`

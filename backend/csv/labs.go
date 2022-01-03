@@ -14,6 +14,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 		"updatedOn",
 		"updatedBy",
 		"personId",
+		"dateOfBirth",
 		"dateSampleTaken",
 		"dateSampleDelivered",
 		"dateSampleTested",
@@ -56,6 +57,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 		}
 		record = append(record, lab.UpdatedBy)
 		record = append(record, lab.Person.ID)
+		record = append(record, lab.Person.Dob.Format(layoutISO))
 		record = append(record, lab.DateSampleTaken.Format(layoutISO))
 		if lab.DateSampleDelivered == nil {
 			record = append(record, "")
