@@ -31,11 +31,13 @@ const Login = (props: LoginProps) => {
   const { httpInstance } = useHttpApi();
 
   const onSubmit = (e: { value: any }) => {
+    console.log('submitting: ', e.value);
     setCreds(e.value);
     setStatus('SUBMIT');
   };
 
   React.useEffect(() => {
+    console.log('effect: login');
     const login = () => {
       httpInstance
         .post('/auth', creds)

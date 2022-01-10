@@ -22,13 +22,13 @@ function App() {
   });
 
   // Display Login form if token is empty
-  // if (token.token.trim() === '') {
-  //   return (
-  //     <HttpApiProvider baseUrl={REACT_APP_API_URL}>
-  //       <Login onLogin={(token) => setToken({ token, loading: false })} />;
-  //     </HttpApiProvider>
-  //   );
-  // }
+  if (token.token.trim() === '') {
+    return (
+      <HttpApiProvider baseUrl={REACT_APP_API_URL}>
+        <Login onLogin={(token) => setToken({ token, loading: false })} />;
+      </HttpApiProvider>
+    );
+  }
 
   return (
     <Grommet theme={dark} full>

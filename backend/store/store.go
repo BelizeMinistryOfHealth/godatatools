@@ -106,7 +106,10 @@ func (s *Store) FindCasesByPersonIds(ctx context.Context, IDs []string) (map[str
 		}
 	}
 
-	filter := bson.M{"_id": bson.M{"$in": IDs}}
+	filter := bson.M{
+		"_id":     bson.M{"$in": IDs},
+		"deleted": false,
+	}
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		return indexDB, MongoQueryErr{
@@ -435,6 +438,7 @@ func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate 
 		return labTests, fmt.Errorf("startDate must be before endDate")
 	}
 	filter := bson.M{
+		"deleted": false,
 		"$and": bson.A{
 			bson.M{"createdAt": bson.M{"$gte": startDate}},
 			bson.M{"createdAt": bson.M{"$lt": endDate.Add(time.Hour * 24)}},
