@@ -297,6 +297,15 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 	if test.DateTesting != nil {
 		personAge = age.AgeAt(person.Dob, *test.DateTesting)
 	}
+	var gender = person.Gender
+	if gender == "LNG_REFERENCE_DATA_CATEGORY_GENDER_MALE" {
+		gender = "Male"
+	}
+
+	if gender == "LNG_REFERENCE_DATA_CATEGORY_FEMALE" {
+		gender = "Female"
+	}
+
 	labTest := models.LabTest{
 		ID:                  test.ID,
 		LabName:             labFacility.Name,
@@ -319,7 +328,7 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 			ID:        person.ID,
 			FirstName: person.FirstName,
 			LastName:  person.LastName,
-			Gender:    person.Gender,
+			Gender:    gender,
 			Dob:       person.Dob,
 			Age:       personAge,
 		},

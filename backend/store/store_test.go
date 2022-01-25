@@ -169,7 +169,7 @@ func TestStore_LabTestById(t *testing.T) {
 	}
 	defer store.Disconnect(ctx)
 
-	labTest, err := store.LabTestById(ctx, "dd63def7-a107-4b8a-90a1-9e50b4388d87")
+	labTest, err := store.LabTestById(ctx, "a091e02f-bb33-42c9-ac81-699c19ce9790")
 	if err != nil {
 		t.Fatalf("LabTestsByCaseName() failed: %v", err)
 	}

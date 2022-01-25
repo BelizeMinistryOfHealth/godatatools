@@ -51,6 +51,25 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 	m.Row(10, func() {
 		m.SetBorder(true)
 		m.Col(3, func() {
+			m.Text("Lab Name", props.Text{
+				Top:   3,
+				Size:  12,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(9, func() {
+			m.Text(test.LabName, props.Text{
+				Top:   3,
+				Size:  12,
+				Align: consts.Center,
+			})
+		})
+	})
+
+	m.Row(10, func() {
+		m.SetBorder(true)
+		m.Col(3, func() {
 			m.Text("Name", props.Text{
 				Top:   3,
 				Size:  12,
@@ -165,14 +184,17 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 				Align: consts.Middle,
 			})
 		})
-		m.Col(3, func() {
-			m.Text(test.TestType, props.Text{
+		m.Col(7, func() {
+			m.Text(fmt.Sprintf("  %s", test.TestType), props.Text{
 				Top:   3,
-				Size:  12,
-				Align: consts.Middle,
+				Size:  10,
+				Align: consts.Left,
 			})
 		})
 
+		m.SetBorder(false)
+	})
+	m.Row(10, func() {
 		m.SetBorder(true)
 		m.Col(3, func() {
 			m.Text("Test Result", props.Text{
@@ -182,11 +204,11 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 				Align: consts.Middle,
 			})
 		})
-		m.Col(3, func() {
-			m.Text(test.Result, props.Text{
+		m.Col(7, func() {
+			m.Text(fmt.Sprintf("  %s", test.Result), props.Text{
 				Top:   3,
 				Size:  12,
-				Align: consts.Middle,
+				Align: consts.Left,
 			})
 		})
 
