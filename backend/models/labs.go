@@ -24,13 +24,25 @@ type RawLabTest struct {
 	UpdatedBy           string     `bson:"updatedBy" json:"updatedBy"`
 }
 
+type PersonDocument struct {
+	Type   string `bson:"type" json:"type"`
+	Number string `bson:"number" json:"number"`
+}
+
+const (
+	SSN      = "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_SOCIAL_SECURITY_NO"
+	BHIS     = "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_BHIS_NO"
+	PASSPORT = "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_PASSPORT"
+)
+
 type Person struct {
-	ID        string    `json:"personId"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Gender    string    `json:"gender"`
-	Dob       time.Time `json:"dob"`
-	Age       int       `json:"age"`
+	ID        string           `json:"personId"`
+	FirstName string           `json:"firstName"`
+	LastName  string           `json:"lastName"`
+	Gender    string           `json:"gender"`
+	Dob       time.Time        `json:"dob"`
+	Age       int              `json:"age"`
+	Documents []PersonDocument `json:"documents"`
 }
 
 type LabTest struct {
@@ -56,6 +68,21 @@ type LabTest struct {
 	LabFacility         LabFacility `json:"labFacility"`
 }
 
+// PersonDocumentTypeString converts the document type from the reference code in GoData
+// to a human readable code.
+func PersonDocumentTypeString(doc PersonDocument) string {
+	var documentType = ""
+	switch doc.Type {
+	case "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_PASSPORT":
+		documentType = "Passport"
+	case "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_BHIS_NO":
+		documentType = "BHIS"
+	case "LNG_REFERENCE_DATA_CATEGORY_DOCUMENT_TYPE_SOCIAL_SECURITY_NO":
+		documentType = "Social Security Number"
+	}
+	return documentType
+}
+
 type LabTestCase struct {
 	ID             string           `bson:"_id" json:"id"`
 	VisualID       string           `json:"visualId"`
@@ -78,6 +105,7 @@ type LabTestCase struct {
 	DateOfOutcome  *time.Time       `json:"dateOfOutcome"`
 	Addresses      []Address        `json:"addresses"`
 	Location       *AddressLocation `json:"location"`
+	Documents      []PersonDocument `json:"documents"`
 }
 
 type LabTestReport struct {

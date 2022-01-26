@@ -35,6 +35,7 @@ type Case struct {
 	Addresses        []Address         `json:"addresses"`
 	Questionnaire    Questionnaire     `bson:"questionnaireAnswers" json:"questionnaireAnswers"`
 	Hospitalizations []Hospitalization `bson:"dateRanges" json:"dateRanges,omitempty"`
+	Documents        []PersonDocument  `bson:"documents" json:"documents"`
 }
 
 type Outbreak struct {

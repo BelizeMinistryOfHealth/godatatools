@@ -1,6 +1,7 @@
 package store
 
 import (
+	"bz.moh.epi/godatatools/models"
 	"context"
 	"fmt"
 	"os"
@@ -207,15 +208,23 @@ func TestStore_FindLabTestsByDateRange(t *testing.T) {
 	store := setupDb(t, ctx)
 	defer store.Disconnect(ctx)
 
-	startDate, _ := time.Parse(isoLayout, "2021-12-21")
-	endDate, _ := time.Parse(isoLayout, "2021-12-31")
+	startDate, _ := time.Parse(isoLayout, "2022-01-19")
+	endDate, _ := time.Parse(isoLayout, "2022-01-20")
 
 	labTests, err := store.FindLabTestsByDateRange(ctx, &startDate, &endDate)
 	if err != nil {
 		t.Fatalf("FindLabTestsByDateRange failed: %v", err)
 	}
 	t.Logf("labTests: %v", labTests)
+	var filemon models.LabTestReport
 
+	for i := range labTests {
+		if labTests[i].Person.FirstName == "Filemon" {
+			filemon = labTests[i]
+		}
+	}
+
+	t.Logf("filemon: %v", filemon)
 }
 
 func setupDb(t *testing.T, ctx context.Context) Store {

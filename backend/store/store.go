@@ -128,7 +128,7 @@ func (s *Store) FindCasesByPersonIds(ctx context.Context, IDs []string) (map[str
 		}
 		// Find location
 		addresses := person.Addresses
-		if addresses != nil && len(addresses) > 0 {
+		if len(addresses) > 0 {
 			//location, err := s.FindLocation(ctx, addresses[0].LocationId)
 			location := locations[addresses[0].LocationId]
 			if err == nil {
@@ -331,6 +331,7 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 			Gender:    gender,
 			Dob:       person.Dob,
 			Age:       personAge,
+			Documents: person.Documents,
 		},
 		LabFacility: labFacility,
 	}
@@ -396,6 +397,7 @@ func RawLabTestToLabReport(test models.RawLabTest, person models.LabTestCase) mo
 			Outcome:        person.Outcome,
 			DateOfOutcome:  person.DateOfOutcome,
 			Addresses:      person.Addresses,
+			Documents:      person.Documents,
 		},
 		LabFacility: labFacility,
 	}
@@ -458,7 +460,7 @@ func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate 
 	cursor, err := labCol.Find(ctx, filter)
 	if err != nil {
 		return labTests, MongoQueryErr{
-			Reason: fmt.Sprintf("failed to fetch lab results"),
+			Reason: "failed to fetch lab results",
 			Inner:  err,
 		}
 	}
@@ -484,8 +486,8 @@ func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate 
 	}
 
 	for i := range rawLabTests {
-		personId := rawLabTests[i].PersonId
-		person := cases[personId]
+		personID := rawLabTests[i].PersonId
+		person := cases[personID]
 		if person != nil {
 			labTests = append(labTests, RawLabTestToLabReport(rawLabTests[i], *person))
 		}

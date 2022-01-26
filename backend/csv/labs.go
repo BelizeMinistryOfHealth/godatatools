@@ -39,6 +39,9 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 		"district",
 		"addressLine1",
 		"postalCode",
+		"ssn",
+		"bhis",
+		"passport",
 	}
 	if err := writer.Write(headers); err != nil {
 		return fmt.Errorf("error: writing header for csv: %w", err)
@@ -107,6 +110,30 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 			record = append(record, "")
 			record = append(record, address.AddressLine1)
 			record = append(record, address.PostalCode)
+		}
+
+		if lab.Person.Documents == nil {
+			record = append(record, "")
+			record = append(record, "")
+			record = append(record, "")
+		} else {
+			var ssn = ""
+			var bhis = ""
+			var passport = ""
+			for i := range lab.Person.Documents {
+				if lab.Person.Documents[i].Type == models.SSN {
+					ssn = lab.Person.Documents[i].Number
+				}
+				if lab.Person.Documents[i].Type == models.BHIS {
+					bhis = lab.Person.Documents[i].Number
+				}
+				if lab.Person.Documents[i].Type == models.PASSPORT {
+					passport = lab.Person.Documents[i].Number
+				}
+			}
+			record = append(record, ssn)
+			record = append(record, bhis)
+			record = append(record, passport)
 		}
 
 		if err := writer.Write(record); err != nil {

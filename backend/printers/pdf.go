@@ -30,6 +30,22 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 	fullName = fmt.Sprintf("%s %s", fullName, person.LastName)
 	ageAtTest := age.AgeAt(person.Dob, *test.DateSampleTaken)
 
+	documents := test.Person.Documents
+	var bhis = ""
+	var ssn = ""
+	var passport = ""
+	for i := range documents {
+		if documents[i].Type == models.BHIS {
+			bhis = documents[i].Number
+		}
+		if documents[i].Type == models.SSN {
+			ssn = documents[i].Number
+		}
+		if documents[i].Type == models.PASSPORT {
+			passport = documents[i].Number
+		}
+	}
+
 	grayColor := getGrayColor()
 	whiteColor := color.NewWhite()
 	header(m)
@@ -170,6 +186,61 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 			})
 		})
 		m.SetBorder(false)
+	})
+
+	m.Row(10, func() {
+		m.SetBorder(true)
+		m.Col(3, func() {
+			m.Text("Social Security Number", props.Text{
+				Top:   3,
+				Size:  10,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(9, func() {
+			m.Text(fmt.Sprintf("  %s", ssn), props.Text{
+				Top:   3,
+				Size:  12,
+				Align: consts.Left,
+			})
+		})
+	})
+	m.Row(10, func() {
+		m.SetBorder(true)
+		m.Col(3, func() {
+			m.Text("Passport", props.Text{
+				Top:   3,
+				Size:  12,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(9, func() {
+			m.Text(fmt.Sprintf("  %s", passport), props.Text{
+				Top:   3,
+				Size:  12,
+				Align: consts.Left,
+			})
+		})
+	})
+	m.Row(10, func() {
+		m.SetBorder(true)
+		m.Col(3, func() {
+			m.Text("BHIS #", props.Text{
+				Top:   3,
+				Size:  12,
+				Style: consts.Bold,
+				Align: consts.Center,
+			})
+		})
+		m.Col(9, func() {
+			m.Text(fmt.Sprintf("  %s", bhis), props.Text{
+				Top:   3,
+				Size:  12,
+				Align: consts.Left,
+			})
+		})
 	})
 
 	m.Row(10, func() {})
