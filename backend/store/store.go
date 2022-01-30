@@ -302,7 +302,7 @@ func RawLabTestToLabTest(test models.RawLabTest, person models.Case) models.LabT
 		gender = "Male"
 	}
 
-	if gender == "LNG_REFERENCE_DATA_CATEGORY_FEMALE" {
+	if gender == "LNG_REFERENCE_DATA_CATEGORY_GENDER_FEMALE" {
 		gender = "Female"
 	}
 

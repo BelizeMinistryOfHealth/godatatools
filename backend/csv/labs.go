@@ -131,7 +131,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 					passport = lab.Person.Documents[i].Number
 				}
 			}
-			record = append(record, ssn)
+			record = append(record, fmt.Sprintf("%09s", ssn))
 			record = append(record, bhis)
 			record = append(record, passport)
 		}

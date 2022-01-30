@@ -199,7 +199,7 @@ func PdfPrinter(test models.LabTest) (pdf.Maroto, error) {
 			})
 		})
 		m.Col(9, func() {
-			m.Text(fmt.Sprintf("  %s", ssn), props.Text{
+			m.Text(fmt.Sprintf("  %09s", ssn), props.Text{
 				Top:   3,
 				Size:  12,
 				Align: consts.Left,
