@@ -25,6 +25,7 @@ type Store struct {
 const personCollection = "person"
 const outbreakCollection = "outbreak"
 const labCollection = "labResult"
+const accessTokenCollection = "accessToken"
 
 //go:embed locs2.json
 var rawLocations []byte
