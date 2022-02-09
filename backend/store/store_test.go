@@ -227,6 +227,18 @@ func TestStore_FindLabTestsByDateRange(t *testing.T) {
 	t.Logf("filemon: %v", filemon)
 }
 
+func TestStore_FindUserByID(t *testing.T) {
+	ctx := context.Background()
+	store := setupDb(t, ctx)
+	defer store.Disconnect(ctx)
+	ID := "073784ed-503c-436c-98dd-b5a711a88a3f"
+	user, err := store.FindUserByID(ctx, ID)
+	if err != nil {
+		t.Fatalf("FindUserByID failed: %v", err)
+	}
+	t.Logf("user: %v", user)
+}
+
 func setupDb(t *testing.T, ctx context.Context) Store {
 	database := os.Getenv("MONGO_DB")
 	uri := os.Getenv("MONGO_URI")

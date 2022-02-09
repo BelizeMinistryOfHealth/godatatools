@@ -26,6 +26,7 @@ const personCollection = "person"
 const outbreakCollection = "outbreak"
 const labCollection = "labResult"
 const accessTokenCollection = "accessToken"
+const userCollection = "user"
 
 //go:embed locs2.json
 var rawLocations []byte
