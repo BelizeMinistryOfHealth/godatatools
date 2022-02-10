@@ -9,7 +9,10 @@ import (
 // FindUserByID returns the user that has the corresponding ID
 func (s *Store) FindUserByID(ctx context.Context, ID string) (*models.User, error) {
 	col := s.Client.Database(s.Database).Collection(userCollection)
-	filter := bson.D{{"_id", ID}} //nolint:govet
+	filter := bson.M{"$and": bson.A{
+		bson.M{"_id": ID},
+		bson.M{"deleted": false},
+	}}
 	var user models.User
 	err := col.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
