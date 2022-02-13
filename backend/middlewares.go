@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+type AuthToken struct {
+	UserID string
+}
+
 // VerifyToken is a middleware that retrieves the Authorization header,
 // and checks that the token is valid by querying GoData.
 func (s Server) VerifyToken() Middleware {
@@ -20,7 +24,7 @@ func (s Server) VerifyToken() Middleware {
 				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 				return
 			}
-			ctx := context.WithValue(r.Context(), "userID", userID)
+			ctx := context.WithValue(r.Context(), "userID", AuthToken{UserID: userID})
 			f(w, r.WithContext(ctx))
 		}
 	}
