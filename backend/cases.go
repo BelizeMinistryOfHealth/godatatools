@@ -167,7 +167,18 @@ func (s Server) LabTestResults(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	labTests, err := s.DbRepository.LabTestsByCaseName(r.Context(), firstName, lastName)
+	authToken := r.Context().Value("authToken").(AuthToken)
+	userID := authToken.UserID
+	user, err := s.DbRepository.FindUserByID(r.Context(), userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"userID": userID,
+		}).WithError(err).Error("failed to retrieve user")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	labTests, err := s.DbRepository.LabTestsByCaseName(r.Context(), firstName, lastName, user.OutbreakIDs)
 	if err != nil {
 		log.WithFields(log.Fields{
 			"firstName": firstName,

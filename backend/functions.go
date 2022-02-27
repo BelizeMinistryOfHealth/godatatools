@@ -55,7 +55,7 @@ func HandlerGoDataAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlerLabTestSearchResult(w http.ResponseWriter, r *http.Request) {
-	mid := NewChain(EnableCors(), JsonContentType())
+	mid := NewChain(EnableCors(), JsonContentType(), server.VerifyToken())
 	mid.Then(server.LabTestResults)(w, r)
 }
 

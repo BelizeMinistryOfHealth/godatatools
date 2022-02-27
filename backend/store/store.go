@@ -231,14 +231,18 @@ func (s *Store) LabTestsForCases(ctx context.Context, caseIds []string) ([]model
 }
 
 // LabTestsByCaseName retrieves the lab tests for a case that matches the first & last names.
-func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName string) ([]models.LabTest, error) {
+func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName string, outbreakIDs []string) ([]models.LabTest, error) {
 	var rawLabTests []models.RawLabTest
 	var labTests []models.LabTest
 	/// find cases by first & last names.
 	personCol := s.Client.Database(s.Database).Collection(personCollection)
 	firstNameRegex := primitive.Regex{Pattern: firstName, Options: "i"}
 	lastNameRegex := primitive.Regex{Pattern: lastName, Options: "i"}
-	filter := bson.M{"firstName": bson.M{"$regex": firstNameRegex}, "lastName": bson.M{"$regex": lastNameRegex}}
+	filter := bson.M{
+		"firstName":  bson.M{"$regex": firstNameRegex},
+		"lastName":   bson.M{"$regex": lastNameRegex},
+		"outbreakId": bson.M{"$in": outbreakIDs},
+	}
 	var cases []models.Case
 	cursor, err := personCol.Find(ctx, filter)
 	if err != nil {

@@ -22,9 +22,7 @@ const LabTestResultSearch = () => {
   const printUrl = `${baseUrl}/labtest/pdf`;
 
   React.useEffect(() => {
-    // console.log('set state: ', formState);
     const getLabTests = () => {
-      console.dir({ formState });
       httpInstance
         .get(
           `${httpInstance.getBaseUrl()}/labTests/searchByName?firstName=${

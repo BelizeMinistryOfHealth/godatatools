@@ -146,8 +146,8 @@ func TestStore_LabTestsByCaseName(t *testing.T) {
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
 	defer store.Disconnect(ctx) //nolint:errcheck
-
-	labTests, err := store.LabTestsByCaseName(ctx, "robErto", "GuerrA")
+	outbreakIDs := []string{"5fc2d66b-8af8-42eb-a47a-c56fdd42264a"}
+	labTests, err := store.LabTestsByCaseName(ctx, "robErto", "GuerrA", outbreakIDs)
 	if err != nil {
 		t.Fatalf("LabTestsByCaseName() failed: %v", err)
 	}
