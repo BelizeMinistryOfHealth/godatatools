@@ -448,7 +448,7 @@ func findCaseInCases(caseId string, cases []models.Case) models.Case {
 }
 
 // FindLabTestsByDateRange returns all lab tests that occurred between two dates
-func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate *time.Time) ([]models.LabTestReport, error) {
+func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate *time.Time, outbreakIDs []string) ([]models.LabTestReport, error) {
 	var rawLabTests []models.RawLabTest
 	var labTests []models.LabTestReport
 	if startDate.After(*endDate) {
@@ -459,6 +459,7 @@ func (s *Store) FindLabTestsByDateRange(ctx context.Context, startDate, endDate 
 		"$and": bson.A{
 			bson.M{"createdAt": bson.M{"$gte": startDate}},
 			bson.M{"createdAt": bson.M{"$lt": endDate.Add(time.Hour * 24)}},
+			bson.M{"outbreakId": bson.M{"$in": outbreakIDs}},
 		},
 	}
 

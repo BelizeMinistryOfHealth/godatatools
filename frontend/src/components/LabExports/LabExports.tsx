@@ -14,6 +14,8 @@ import { PageMenus } from '../PageMenus/PageMenus';
 import Header from '../Header/Header';
 import { differenceInDays, format, isAfter, parseISO } from 'date-fns';
 import { useHttpApi } from '../../providers/HttpProvider';
+import { LocalStorageKey } from '../../constants';
+import { Redirect } from 'react-router-dom';
 
 interface LabTestFormState {
   startDate?: string;
@@ -31,6 +33,11 @@ const LabExports = (): JSX.Element => {
     const nextValue = event.value;
     setDateRangeNoTZ(nextValue);
   };
+
+  const token = localStorage.getItem(LocalStorageKey);
+  if (!token) {
+    return <Redirect to={'/'} />;
+  }
 
   const onSubmit = (event: any) => {
     setErrors(null);
@@ -57,7 +64,7 @@ const LabExports = (): JSX.Element => {
       `${httpInstance.getBaseUrl()}/labtestreport/csv?startDate=${format(
         startDate,
         'yyyy-MM-dd'
-      )}&endDate=${format(endDate, 'yyyy-MM-dd')}`,
+      )}&endDate=${format(endDate, 'yyyy-MM-dd')}&token=${JSON.parse(token)}`,
       '_blank'
     );
   };

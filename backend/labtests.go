@@ -50,7 +50,28 @@ func (s Server) LabTestsByDateRange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	labTests, err := s.DbRepository.FindLabTestsByDateRange(r.Context(), &startDate, &endDate)
+	authToken := query.Get("token")
+
+	userID, err := s.DbRepository.FindUserIDForAccessToken(r.Context(), authToken)
+	if err != nil {
+		http.Error(w, "invalid token", http.StatusBadRequest)
+		return
+	}
+
+	user, err := s.DbRepository.FindUserByID(r.Context(), userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"userID": userID,
+		}).WithError(err).Error("failed to retrieve user")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+	labTests, err := s.DbRepository.FindLabTestsByDateRange(r.Context(), &startDate, &endDate, user.OutbreakIDs)
+	log.WithFields(log.Fields{
+		"userID":    userID,
+		"outbreaks": user.OutbreakIDs,
+		"labTests":  labTests,
+	}).Info("lab reports")
 	if err != nil {
 		log.WithError(err).Errorf("failed to retrieve lab tests")
 		http.Error(w, "failed to retrieve lab tests", http.StatusInternalServerError)
