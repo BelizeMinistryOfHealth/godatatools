@@ -3,6 +3,7 @@ package godatatools
 import (
 	"context"
 	"net/http"
+	"strings"
 )
 
 type AuthToken struct {
@@ -18,13 +19,18 @@ func (s Server) VerifyToken() Middleware {
 				f(w, r)
 				return
 			}
-			token := r.Header.Get("Authorization")
-			userID, err := s.DbRepository.FindUserIDForAccessToken(r.Context(), token)
+			token := strings.Split(r.Header.Get("Authorization"), " ")
+			if len(token) != 2 {
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
+			userID, err := s.DbRepository.FindUserIDForAccessToken(r.Context(), token[1])
+
 			if err != nil {
 				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 				return
 			}
-			ctx := context.WithValue(r.Context(), "userID", AuthToken{UserID: userID})
+			ctx := context.WithValue(r.Context(), "authToken", AuthToken{UserID: userID}) //nolint
 			f(w, r.WithContext(ctx))
 		}
 	}

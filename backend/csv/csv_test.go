@@ -24,15 +24,15 @@ func TestWriteCases(t *testing.T) {
 	if err := store.Connect(ctx); err != nil {
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
-	defer store.Disconnect(ctx)
+	defer store.Disconnect(ctx) //nolint:errcheck
 	startDate, _ := time.Parse(isoLayout, "2021-12-21")
 	endDate, _ := time.Parse(isoLayout, "2021-12-31")
 	cases, _ := store.FindCasesByOutbreak(ctx, outbreakId, &startDate, &endDate)
 
-	f, err := os.Create("users.csv")
-	defer f.Close()
+	f, err := os.Create("users.csv") //nolint:ineffassign,govet,staticcheck
+	defer f.Close()                  //nolint:govet,errcheck,staticcheck
 	//b := &bytes.Buffer{}
 	csvWriter := csv.NewWriter(f)
-	WriteCases(csvWriter, cases)
+	WriteCases(csvWriter, cases) //nolint:errcheck
 	csvWriter.Flush()
 }

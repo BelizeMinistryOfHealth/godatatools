@@ -41,7 +41,7 @@ func HandlerCasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlerOutbreaks(w http.ResponseWriter, r *http.Request) {
-	corsMid := NewChain(EnableCors(), JsonContentType())
+	corsMid := NewChain(EnableCors(), JsonContentType(), server.VerifyToken())
 	//if err := server.DbRepository.Connect(r.Context()); err != nil {
 	//	log.Fatalf("could not connect to mongo: %v", err)
 	//}

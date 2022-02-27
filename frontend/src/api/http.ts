@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { useState } from 'react';
+import { LocalStorageKey } from '../constants';
 
 class HttpApi {
   protected baseUrl: string;
@@ -8,6 +9,7 @@ class HttpApi {
     Accept: string;
     'Content-Type': string;
     responseType?: string;
+    Authorization?: string;
   };
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -15,6 +17,10 @@ class HttpApi {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     };
+    const token = localStorage.getItem(LocalStorageKey);
+    if (token) {
+      this.headers['Authorization'] = `Bearer ${JSON.parse(token)}`;
+    }
     this.axiosInstance = Axios.create({
       baseURL: this.baseUrl,
       headers: this.headers,

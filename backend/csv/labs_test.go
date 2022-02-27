@@ -21,7 +21,7 @@ func TestWriteLabs(t *testing.T) {
 	if err := dbStore.Connect(ctx); err != nil {
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
-	defer dbStore.Disconnect(ctx)
+	defer dbStore.Disconnect(ctx) //nolint:errcheck
 
 	startDate, _ := time.Parse(layoutISO, "2021-12-22")
 	endDate, _ := time.Parse(layoutISO, "2021-12-31")
@@ -29,8 +29,8 @@ func TestWriteLabs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Fetching data failed: %v", err)
 	}
-	f, err := os.Create("labs.csv")
-	defer f.Close()
+	f, err := os.Create("labs.csv") //nolint:ineffassign,staticcheck,govet
+	defer f.Close()                 //nolint:errcheck,staticcheck,govet
 	csvWriter := csv.NewWriter(f)
 	if err := WriteLabs(csvWriter, labTests); err != nil {
 		t.Fatalf("failed to write lab csv %v", err)

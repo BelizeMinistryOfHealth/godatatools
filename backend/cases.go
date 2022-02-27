@@ -13,6 +13,15 @@ import (
 	"time"
 )
 
+func canViewOutbreak(outbreakIDs []string, outbreakID string) bool {
+	for idx, _ := range outbreakIDs { //nolint:gofmt,gosimple
+		if outbreakIDs[idx] == outbreakID {
+			return true
+		}
+	}
+	return false
+}
+
 func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodOptions {
 		return
@@ -25,9 +34,29 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 
-	outbreakId := query.Get("outbreakId")
-	if len(outbreakId) == 0 {
+	outbreakID := query.Get("outbreakId")
+	if len(outbreakID) == 0 {
 		http.Error(w, "outbreakId was not provided", http.StatusBadRequest)
+		return
+	}
+
+	authToken := r.Context().Value("authToken").(AuthToken)
+	userID := authToken.UserID
+	user, err := s.DbRepository.FindUserByID(r.Context(), userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"userID": userID,
+		}).WithError(err).Error("failed to retrieve user")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	if !canViewOutbreak(user.OutbreakIDs, outbreakID) {
+		log.WithFields(log.Fields{
+			"outbreakID": outbreakID,
+			"userID":     userID,
+		}).Error("requested unauthorized outbreak")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
 
@@ -65,11 +94,11 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cases, err := s.DbRepository.FindCasesByOutbreak(r.Context(), outbreakId, &startDate, &endDate)
+	cases, err := s.DbRepository.FindCasesByOutbreak(r.Context(), outbreakID, &startDate, &endDate)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		log.WithFields(log.Fields{
-			"outbreakId": outbreakId,
+			"outbreakId": outbreakID,
 		}).WithError(err).Error("could not retrieve cases for the outbreak")
 		return
 	}
@@ -86,7 +115,6 @@ func (s Server) CasesByOutbreak(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error streaming file", http.StatusInternalServerError)
 		return
 	}
-	return
 }
 
 func (s Server) AllOutbreaks(w http.ResponseWriter, r *http.Request) {
@@ -98,14 +126,23 @@ func (s Server) AllOutbreaks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "GET only", http.StatusBadRequest)
 		return
 	}
-
-	outbreaks, err := s.DbRepository.ListOutbreaks(r.Context())
+	authToken := r.Context().Value("authToken").(AuthToken)
+	userID := authToken.UserID
+	user, err := s.DbRepository.FindUserByID(r.Context(), userID)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"userID": userID,
+		}).WithError(err).Error("failed to retrieve user")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+	outbreaks, err := s.DbRepository.ListOutbreaks(r.Context(), user.OutbreakIDs)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		log.WithError(err).Error("could not retrieve the outbreaks")
 		return
 	}
-	json.NewEncoder(w).Encode(outbreaks)
+	json.NewEncoder(w).Encode(outbreaks) //nolint:errcheck
 }
 
 func (s Server) LabTestResults(w http.ResponseWriter, r *http.Request) {
@@ -192,6 +229,4 @@ func (s Server) LabTestPdfHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	return
-
 }

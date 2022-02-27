@@ -167,10 +167,10 @@ func (s *Store) FindCasesByReportingDate(ctx context.Context, outbreakID string,
 }
 
 // ListOutbreaks lists all the current outbreaks
-func (s *Store) ListOutbreaks(ctx context.Context) ([]models.Outbreak, error) {
+func (s *Store) ListOutbreaks(ctx context.Context, outbreakIDS []string) ([]models.Outbreak, error) {
 	collection := s.Client.Database(s.Database).Collection(outbreakCollection)
 	var outbreaks []models.Outbreak
-	cursor, err := collection.Find(ctx, bson.M{})
+	cursor, err := collection.Find(ctx, bson.M{"_id": bson.M{"$in": outbreakIDS}})
 	if err != nil {
 		return outbreaks, MongoQueryErr{
 			Reason: "error listing outbreaks",
@@ -270,7 +270,7 @@ func (s *Store) LabTestsByCaseName(ctx context.Context, firstName, lastName stri
 		}
 	}
 
-	for i, _ := range rawLabTests {
+	for i, _ := range rawLabTests { //nolint:gofmt,gosimple
 		labTests = append(labTests, RawLabTestToLabTest(rawLabTests[i], findCaseInCases(rawLabTests[i].PersonId, cases)))
 	}
 
@@ -409,7 +409,7 @@ func RawLabTestToLabReport(test models.RawLabTest, person models.LabTestCase) mo
 // LabTestById searches for a lab test that has the specified id.
 func (s *Store) LabTestById(ctx context.Context, id string) (models.LabTest, error) {
 	labCol := s.Client.Database(s.Database).Collection(labCollection)
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{"_id", id}} //nolint:govet
 	var rawLabTest models.RawLabTest
 	err := labCol.FindOne(ctx, filter).Decode(&rawLabTest)
 	if err != nil {
@@ -419,7 +419,7 @@ func (s *Store) LabTestById(ctx context.Context, id string) (models.LabTest, err
 		}
 	}
 	personCol := s.Client.Database(s.Database).Collection(personCollection)
-	personFilter := bson.D{{"_id", rawLabTest.PersonId}}
+	personFilter := bson.D{{"_id", rawLabTest.PersonId}} //nolint:govet
 	var person models.Case
 	personErr := personCol.FindOne(ctx, personFilter).Decode(&person)
 	if personErr != nil {
@@ -434,7 +434,7 @@ func (s *Store) LabTestById(ctx context.Context, id string) (models.LabTest, err
 
 func findCaseInCases(caseId string, cases []models.Case) models.Case {
 	var person models.Case
-	for i, _ := range cases {
+	for i, _ := range cases { //nolint:gofmt,gosimple
 		if caseId == cases[i].ID {
 			person = cases[i]
 			break

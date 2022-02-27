@@ -4,6 +4,7 @@ import HttpApiProvider from './providers/HttpProvider';
 import { dark, Grommet, Main } from 'grommet';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './components/Routes';
+import { LocalStorageKey } from './constants';
 
 const REACT_APP_API_URL = process.env['REACT_APP_API_URL']
   ? process.env['REACT_APP_API_URL']
@@ -25,7 +26,13 @@ function App() {
   if (token.token.trim() === '') {
     return (
       <HttpApiProvider baseUrl={REACT_APP_API_URL}>
-        <Login onLogin={(token) => setToken({ token, loading: false })} />;
+        <Login
+          onLogin={(token) => {
+            setToken({ token, loading: false });
+            localStorage.setItem(LocalStorageKey, JSON.stringify(token));
+          }}
+        />
+        ;
       </HttpApiProvider>
     );
   }
