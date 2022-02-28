@@ -39,6 +39,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 		"district",
 		"addressLine1",
 		"postalCode",
+		"phoneNumber",
 		"ssn",
 		"bhis",
 		"passport",
@@ -102,6 +103,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 			record = append(record, "")
 			record = append(record, "")
 			record = append(record, "")
+			record = append(record, "")
 		} else {
 			address := lab.Person.Addresses[0]
 			record = append(record, address.TypeId)
@@ -110,6 +112,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 			record = append(record, "")
 			record = append(record, address.AddressLine1)
 			record = append(record, address.PostalCode)
+			record = append(record, address.PhoneNumber)
 		}
 
 		if lab.Person.Documents == nil {
