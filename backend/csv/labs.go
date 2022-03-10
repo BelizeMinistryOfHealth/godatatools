@@ -96,7 +96,7 @@ func WriteLabs(writer *csv.Writer, labs []models.LabTestReport) error {
 			record = append(record, lab.Person.DateOfOnset.Format(layoutISO))
 		}
 		record = append(record, lab.Person.ReportingDate.Format(layoutISO))
-		if lab.Person.Addresses == nil {
+		if lab.Person.Addresses == nil || len(lab.Person.Addresses) == 0 {
 			record = append(record, "")
 			record = append(record, "")
 			record = append(record, "")
